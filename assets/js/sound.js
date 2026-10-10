@@ -132,27 +132,49 @@
   /* ---------- control ---------- */
   const LEVEL = .55;
   function fadeTo(v, s = .6) { if (!ctx) return; const t = ctx.currentTime; master.gain.cancelScheduledValues(t); master.gain.setValueAtTime(master.gain.value, t); master.gain.linearRampToValueAtTime(v, t + s); }
+  // iOS/Android only unlock audio inside a tap's touchend/click (not touchstart/pointerdown),
+  // and iOS also wants a sound actually started inside that gesture. So: try on every gesture
+  // type, play a silent blip each time, and only stop listening once audio is really running.
+  function unlockBlip() {
+    try { const b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0); } catch {}
+  }
+  function onRunning() {
+    if (!started) { started = true; music(); }
+    fadeTo(LEVEL, .25);
+    if (pendingClick) { pendingClick = false; SFX.click(); }
+    try { sessionStorage.setItem('az.playing', 1); } catch {}
+    disarm();
+  }
   function start() {
     if (!enabled) return;
-    init();
-    ctx.resume().then(() => { if (!started) { started = true; music(); } fadeTo(LEVEL, .25); if (pendingClick) { pendingClick = false; SFX.click(); } try { sessionStorage.setItem('az.playing', 1); } catch {} });
+    init(); unlockBlip();
+    const p = ctx.resume();
+    if (ctx.state === 'running') onRunning();
+    else if (p && p.then) p.then(() => { if (ctx.state === 'running') onRunning(); }).catch(() => {});
   }
   function mute(instant) {
     if (!ctx) return;
     if (instant) { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(0, ctx.currentTime); ctx.suspend(); }
     else { fadeTo(0, .35); setTimeout(() => !enabled && ctx.suspend(), 400); }
   }
-  // if music was already playing on the previous page, try to continue straight away
-  // (allowed when the browser remembers the visitor's interaction; otherwise the next click starts it)
-  try { if (enabled && sessionStorage.getItem('az.playing')) { init(); ctx.resume().then(() => { if (ctx.state === 'running') { started = true; music(); fadeTo(LEVEL, .25); } }); } } catch {}
-  const kick0 = e => { pendingClick = !!(e && e.target && e.target.closest && e.target.closest('a, button')); start(); ['pointerdown', 'keydown', 'touchstart'].forEach(e => removeEventListener(e, kick0, true)); };
-  ['pointerdown', 'keydown', 'touchstart'].forEach(e => addEventListener(e, kick0, true));
+  const GESTURES = ['pointerdown', 'touchend', 'click', 'keydown'];
+  const kick0 = e => {
+    if (!enabled) return;
+    if (e && e.type !== 'touchend') pendingClick = !!(e.target && e.target.closest && e.target.closest('a, button'));
+    start();
+  };
+  const arm = () => GESTURES.forEach(g => addEventListener(g, kick0, { capture: true, passive: true }));
+  const disarm = () => GESTURES.forEach(g => removeEventListener(g, kick0, { capture: true }));
+  arm();
+  // music was already playing on the previous visit this session: try to continue straight away
+  try { if (enabled && sessionStorage.getItem('az.playing')) { init(); ctx.resume().then(() => { if (ctx.state === 'running') onRunning(); }).catch(() => {}); } } catch {}
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) mute(true);
-    else if (enabled && started) ctx.resume().then(() => { fadeTo(LEVEL, .3); SFX.arrive(); });
+    if (document.hidden) { mute(true); return; }
+    if (!enabled || !started) return;
+    ctx.resume().then(() => { if (ctx.state === 'running') { fadeTo(LEVEL, .3); SFX.arrive(); } else arm(); }).catch(() => arm());
+    if (ctx.state !== 'running') arm(); // phones may need one more tap after returning to the tab
   });
   addEventListener('pagehide', () => mute(true));
-
   let lastHover = 0;
   window.AZSound = {
     play(name) {
@@ -163,7 +185,7 @@
     toggle() {
       enabled = !enabled;
       try { localStorage.setItem(KEY, enabled ? 'on' : 'off'); if (!enabled) sessionStorage.removeItem('az.playing'); } catch {}
-      if (enabled) { start(); setTimeout(() => SFX.toggle(), 80); } else { if (ctx && ctx.state === 'running') SFX.toggle(); mute(false); }
+      if (enabled) { arm(); start(); setTimeout(() => SFX.toggle(), 80); } else { if (ctx && ctx.state === 'running') SFX.toggle(); mute(false); }
       return enabled;
     },
     get enabled() { return enabled; },

@@ -7,13 +7,16 @@
   const x = c.getContext('2d');
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const mobile = matchMedia('(max-width: 700px)').matches;
+  // phones / touch / low-core devices get a lighter version: lower resolution, fewer particles, 30fps, no CSS blur
+  const LITE = matchMedia('(hover: none), (pointer: coarse), (max-width: 820px)').matches || (navigator.hardwareConcurrency || 8) <= 4;
+  document.documentElement.classList.toggle('lite', LITE);
   const TAU = Math.PI * 2;
   let W, H, D, R, cx, cy, shards = [], embers = [], rings = [], bolts = [];
   let rot = 0, spin = 0, last = performance.now(), lastY = scrollY;
   const mouse = { x: .5, y: .5, tx: .5, ty: .5 };
 
   function size() {
-    D = .5; // rendered at half resolution: softer, cheaper, and the CSS blur finishes it
+    D = LITE ? .28 : .5; // low resolution = soft and cheap; on desktop the CSS blur finishes it
     // 40px bleed on every side so the CSS blur never shows a soft edge
     W = c.width = (innerWidth + 80) * D; H = c.height = (innerHeight + 80) * D;
     c.style.width = innerWidth + 80 + 'px'; c.style.height = innerHeight + 80 + 'px';
@@ -41,10 +44,12 @@
   function ember(init) { return { x: Math.random() * W, y: init ? Math.random() * H : H + 10, r: rnd(.5, 1.8) * D, vy: -rnd(.15, .6) * D, ph: Math.random() * TAU, a: rnd(.2, .8) }; }
   function init() {
     size();
-    shards = Array.from({ length: mobile ? 60 : 140 }, () => shard(true));
-    embers = Array.from({ length: mobile ? 30 : 70 }, () => ember(true));
+    shards = Array.from({ length: LITE ? 34 : 140 }, () => shard(true));
+    embers = Array.from({ length: LITE ? 16 : 70 }, () => ember(true));
   }
-  addEventListener('resize', size);
+  // on phones the address bar hiding fires resize constantly while scrolling; only rebuild on real width changes
+  let lastW = innerWidth;
+  addEventListener('resize', () => { if (LITE && innerWidth === lastW) return; lastW = innerWidth; size(); });
   addEventListener('pointermove', e => { mouse.tx = e.clientX / innerWidth; mouse.ty = e.clientY / innerHeight; }, { passive: true });
   addEventListener('scroll', () => { spin += (scrollY - lastY) * .00035; lastY = scrollY; }, { passive: true });
 
@@ -68,7 +73,9 @@
   }
 
   function frame(now) {
-    const dt = Math.min(now - last, 50) / 16.67; last = now;
+    // lite: cap at ~30fps (motion speed stays the same because everything scales by dt)
+    if (LITE && now - last < 31) { if (!reduce) requestAnimationFrame(frame); return; }
+    const dt = Math.min(now - last, 66) / 16.67; last = now;
     mouse.x += (mouse.tx - mouse.x) * .04; mouse.y += (mouse.ty - mouse.y) * .04;
     spin *= .94;
     rot += (.0012 + spin) * dt;
@@ -124,7 +131,7 @@
     x.fillStyle = g; x.beginPath(); x.arc(cx, cy, 260 * D, 0, TAU); x.fill();
 
     // crackling energy along the X
-    if (!reduce && Math.random() < .06 * dt) bolts.push(bolt(rot * .6 + Math.PI / 4 + (Math.random() * 4 | 0) * Math.PI / 2 + rnd(-.12, .12)));
+    if (!reduce && !LITE && Math.random() < .06 * dt) bolts.push(bolt(rot * .6 + Math.PI / 4 + (Math.random() * 4 | 0) * Math.PI / 2 + rnd(-.12, .12)));
     x.lineCap = 'round';
     bolts = bolts.filter(b => {
       b.life -= .07 * dt; if (b.life <= 0) return false;

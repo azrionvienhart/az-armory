@@ -10,6 +10,8 @@
   const hasG = !!window.gsap;
   const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = matchMedia('(hover:hover) and (pointer:fine)').matches;
+  const LITE = document.documentElement.classList.contains('lite'); // set by bg.js on phones / low-end devices
+  const BLUR = LITE ? 'blur(0px)' : 'blur(8px)';
   const store = {
     get(k, d) { try { const v = localStorage.getItem(k); return v ? JSON.parse(v) : d; } catch { return d; } },
     set(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch {} }
@@ -24,7 +26,7 @@
 
   /* ---------- smooth scroll ---------- */
   let lenis = null;
-  if (window.Lenis && !reduce) {
+  if (window.Lenis && !reduce && fine) {
     lenis = new Lenis({ lerp: .09, smoothWheel: true });
     if (hasG) { lenis.on('scroll', ScrollTrigger.update); gsap.ticker.add(t => lenis.raf(t * 1000)); gsap.ticker.lagSmoothing(0); }
     else { const raf = t => { lenis.raf(t); requestAnimationFrame(raf); }; requestAnimationFrame(raf); }
@@ -169,8 +171,10 @@
       const dir = mq.dataset.dir === 'r' ? 1 : -1;
       let x = 0, boost = 0, skew = 0, last = scrollY;
       on(window, 'scroll', () => { const d = scrollY - last; boost += Math.abs(d) * .06; skew += d * .04; last = scrollY; }, { passive: true });
+      let vis = true; new IntersectionObserver(en => vis = en[0].isIntersecting).observe(mq); // idle while off-screen
       (function loop() {
         if (sig.aborted) return;
+        if (!vis) { requestAnimationFrame(loop); return; }
         boost *= .92; skew *= .88; const w = base.scrollWidth / 2;
         x += dir * (.7 + Math.min(boost, 14)) * (reduce ? 0 : 1);
         if (x <= -w) x += w; if (x >= 0 && dir > 0) x -= w;
@@ -412,8 +416,8 @@
       if (i > 0) {
         tl.to(steps[i - 1], { opacity: 0, y: -40, duration: .4 }, 's' + i)
           .fromTo(steps[i], { opacity: 0, y: 40 }, { opacity: 1, y: 0, duration: .4 }, 's' + i + '+=.15')
-          .to(scenes[i - 1], { opacity: 0, scale: .96, filter: 'blur(8px)', duration: .4 }, 's' + i)
-          .fromTo(scenes[i], { opacity: 0, scale: 1.04, filter: 'blur(8px)' }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .45 }, 's' + i + '+=.15')
+          .to(scenes[i - 1], { opacity: 0, scale: .96, filter: BLUR, duration: .4 }, 's' + i)
+          .fromTo(scenes[i], { opacity: 0, scale: 1.04, filter: BLUR }, { opacity: 1, scale: 1, filter: 'blur(0px)', duration: .45 }, 's' + i + '+=.15')
           .call(() => setCur(i), null, 's' + i + '+=.2');
       }
       tl.fromTo(bars[i], { scaleX: 0 }, { scaleX: 1, duration: 1, ease: 'none' }, 's' + i + (i ? '+=.4' : ''));

@@ -524,3 +524,20 @@ footer{border-top:1px solid var(--line);padding:80px 0 30px;overflow:hidden}
   *,*::before,*::after{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
   .grain{display:none}
 }
+
+/* =========================================================
+   LITE MODE (phones, touch, low-core devices) — html.lite is set by bg.js.
+   Same look, minus the effects that are expensive to paint on mobile GPUs.
+   ========================================================= */
+.lite #bg{filter:none;opacity:.7}
+.lite .grain{display:none}
+.lite .nav.scrolled,.lite .store-panel{backdrop-filter:none;-webkit-backdrop-filter:none;background:rgba(6,5,7,.97)}
+.lite .pcard3d{backdrop-filter:none;-webkit-backdrop-filter:none}
+.lite .btn-red{animation:none}
+.lite .gate::before{animation:none;background:linear-gradient(135deg,var(--red),transparent 40%,transparent 60%,var(--red))}
+.lite .pcard3d .scan,.lite .device .glare{display:none}
+.lite .play::after,.lite .tag .dot,.lite .video .rec i{animation:none}
+.lite .ring::before{display:none}
+.lite .prod .art img{transition:none}
+.lite .soc::before{transition:none}
+.lite .split .w>span,.lite .marquee .track{will-change:auto}
