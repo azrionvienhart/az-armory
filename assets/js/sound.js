@@ -8,7 +8,7 @@
   const KEY = 'az.sound';
   let enabled = true;
   try { enabled = localStorage.getItem(KEY) !== 'off'; } catch {}
-  let ctx = null, master, musicBus, sfxBus, verb, delay, started = false;
+  let pendingClick = false, ctx = null, master, musicBus, sfxBus, verb, delay, started = false;
 
   function impulse(sec, decay) {
     const len = ctx.sampleRate * sec, b = ctx.createBuffer(2, len, ctx.sampleRate);
@@ -84,7 +84,7 @@
   }
   function schedule(i, t) {
     const bar = Math.floor(i / 16), s = i % 16, c = CHORDS[Math.floor(i / 32) % 4], loop = Math.floor(i / 128);
-    const intro = loop === 0 && bar < 2;                   // first 2 bars: arp only, then the groove comes in
+    const intro = false;                                   // groove starts on the first beat (no quiet lead-in)
     if (i % 32 === 0) pad(c, t);
     if (s % 2 === 0) {                                      // eighth-note arpeggio
       const pat = ARPS[loop % 2], k = pat[(s / 2) % 8];
@@ -101,7 +101,7 @@
   function music() {
     arpOut = ctx.createGain(); arpOut.gain.value = .9; arpOut.connect(musicBus); arpOut.connect(delay);
     padOut = ctx.createGain(); padOut.gain.value = 1; padOut.connect(musicBus);
-    nextT = ctx.currentTime + .1;
+    nextT = ctx.currentTime + .02;
     timer = setInterval(() => {
       if (ctx.state !== 'running') { nextT = ctx.currentTime + .1; return; }
       while (nextT < ctx.currentTime + .15) { schedule(step++, nextT); nextT += STEP; }
@@ -135,7 +135,7 @@
   function start() {
     if (!enabled) return;
     init();
-    ctx.resume().then(() => { if (!started) { started = true; music(); } fadeTo(LEVEL, 2); try { sessionStorage.setItem('az.playing', 1); } catch {} });
+    ctx.resume().then(() => { if (!started) { started = true; music(); } fadeTo(LEVEL, .25); if (pendingClick) { pendingClick = false; SFX.click(); } try { sessionStorage.setItem('az.playing', 1); } catch {} });
   }
   function mute(instant) {
     if (!ctx) return;
@@ -144,12 +144,12 @@
   }
   // if music was already playing on the previous page, try to continue straight away
   // (allowed when the browser remembers the visitor's interaction; otherwise the next click starts it)
-  try { if (enabled && sessionStorage.getItem('az.playing')) { init(); ctx.resume().then(() => { if (ctx.state === 'running') { started = true; music(); fadeTo(LEVEL, 1.5); } }); } } catch {}
-  const kick0 = () => { start(); ['pointerdown', 'keydown', 'touchstart'].forEach(e => removeEventListener(e, kick0, true)); };
+  try { if (enabled && sessionStorage.getItem('az.playing')) { init(); ctx.resume().then(() => { if (ctx.state === 'running') { started = true; music(); fadeTo(LEVEL, .25); } }); } } catch {}
+  const kick0 = e => { pendingClick = !!(e && e.target && e.target.closest && e.target.closest('a, button')); start(); ['pointerdown', 'keydown', 'touchstart'].forEach(e => removeEventListener(e, kick0, true)); };
   ['pointerdown', 'keydown', 'touchstart'].forEach(e => addEventListener(e, kick0, true));
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) mute(true);
-    else if (enabled && started) ctx.resume().then(() => { fadeTo(LEVEL, 1); SFX.arrive(); });
+    else if (enabled && started) ctx.resume().then(() => { fadeTo(LEVEL, .3); SFX.arrive(); });
   });
   addEventListener('pagehide', () => mute(true));
 
