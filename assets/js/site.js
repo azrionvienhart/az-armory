@@ -383,7 +383,7 @@
     if (!ST) return;
 
     // hero parallax out
-    if ($('.hero .stage, .p-hero .stage-sigil')) gsap.to('.hero .stage, .p-hero .stage-sigil', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: '.hero, .p-hero', start: 'top top', end: 'bottom top', scrub: true } });
+    if (!LITE && $('.hero .stage, .p-hero .stage-sigil')) gsap.to('.hero .stage, .p-hero .stage-sigil', { yPercent: 18, ease: 'none', scrollTrigger: { trigger: '.hero, .p-hero', start: 'top top', end: 'bottom top', scrub: true } });
 
     // reveals play once on the way down and then stay put
     $$('[data-split="up"]').forEach(h => {
@@ -398,7 +398,7 @@
     $$('[data-count]').forEach(el => ST.create({ trigger: el, start: 'top 95%', once: true, onEnter: () => { el.dataset.done = 1; countUp(el, +el.dataset.count); } }));
     $$('.video, .device, .teaser').forEach(v => gsap.from(v, { scale: .86, opacity: 0, y: 80, duration: 1.4, ease: 'expo.out', scrollTrigger: { trigger: v, start: 'top 88%', once: true } }));
     if ($('.foot-big span')) gsap.from('.foot-big span', { yPercent: 100, opacity: 0, stagger: .04, duration: 1.2, ease: 'expo.out', scrollTrigger: { trigger: '.foot-big', start: 'top 98%', once: true } });
-    $$('.prod .art img').forEach(i => gsap.to(i, { yPercent: 12, ease: 'none', scrollTrigger: { trigger: i.closest('.prod'), scrub: true } }));
+    if (!LITE) $$('.prod .art img').forEach(i => gsap.to(i, { yPercent: 12, ease: 'none', scrollTrigger: { trigger: i.closest('.prod'), scrub: true } }));
 
     walkthrough();
     setTimeout(() => live() && ST.refresh(), 400);

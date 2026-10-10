@@ -6,6 +6,7 @@
    Hiding the tab mutes instantly; the nav toggle remembers the visitor's choice. */
 (() => {
   const KEY = 'az.sound';
+  const LITE = document.documentElement.classList.contains('lite'); // set by bg.js on phones / low-end devices
   let enabled = true;
   try { enabled = localStorage.getItem(KEY) !== 'off'; } catch {}
   let pendingClick = false, ctx = null, master, musicBus, sfxBus, verb, delay, started = false;
@@ -22,7 +23,7 @@
     master = ctx.createGain(); master.gain.value = 0;
     const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 3;
     master.connect(comp).connect(ctx.destination);
-    verb = ctx.createConvolver(); verb.buffer = impulse(2.8, 3);
+    verb = ctx.createConvolver(); verb.buffer = impulse(LITE ? 1.4 : 2.8, 3); // shorter reverb = much less CPU on phones
     const verbOut = ctx.createGain(); verbOut.gain.value = .35; verb.connect(verbOut).connect(master);
     delay = ctx.createDelay(1); delay.delayTime.value = 60 / BPM * .75; // dotted eighth
     const fb = ctx.createGain(); fb.gain.value = .32; const dlp = ctx.createBiquadFilter(); dlp.frequency.value = 2600;
@@ -64,7 +65,7 @@
     const f = hz(m), lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.Q.value = 3;
     lp.frequency.setValueAtTime(3800, t); lp.frequency.exponentialRampToValueAtTime(600, t + .3);
     lp.connect(arpOut);
-    osc('triangle', f, t, .45, .16 * v, lp); osc('sawtooth', f, t, .3, .05 * v, lp, .003, 7);
+    osc('triangle', f, t, .45, .16 * v, lp); if (!LITE) osc('sawtooth', f, t, .3, .05 * v, lp, .003, 7);
   }
   function bass(m, t, dur) {
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 220; lp.connect(musicBus);
@@ -75,7 +76,7 @@
   function snap(t) { nz(t, .16, .07, 'bandpass', 1900, musicBus, .9); }
   function pad(c, t) {
     const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 1100; lp.connect(padOut);
-    c.tones.slice(0, 3).forEach(m => [-8, 8].forEach(det => {
+    c.tones.slice(0, 3).forEach(m => (LITE ? [0] : [-8, 8]).forEach(det => {
       const o = ctx.createOscillator(), g = ctx.createGain(), len = STEP * 30;
       o.type = 'sawtooth'; o.frequency.value = hz(m); o.detune.value = det;
       g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.022, t + 1.2); g.gain.setValueAtTime(.022, t + len - 1.5); g.gain.linearRampToValueAtTime(0, t + len);
@@ -135,7 +136,23 @@
   // iOS/Android only unlock audio inside a tap's touchend/click (not touchstart/pointerdown),
   // and iOS also wants a sound actually started inside that gesture. So: try on every gesture
   // type, play a silent blip each time, and only stop listening once audio is really running.
+  // iPhones mute Web Audio when the ring/silent switch is on silent. Playing a (silent) <audio>
+  // element inside the tap switches the page to "media playback", which ignores that switch.
+  let mediaKey = null;
+  function silentWav() {
+    const n = 4410, b = new ArrayBuffer(44 + n * 2), d = new DataView(b), w = (o, s) => [...s].forEach((ch, i) => d.setUint8(o + i, ch.charCodeAt(0)));
+    w(0, 'RIFF'); d.setUint32(4, 36 + n * 2, true); w(8, 'WAVEfmt '); d.setUint32(16, 16, true); d.setUint16(20, 1, true); d.setUint16(22, 1, true);
+    d.setUint32(24, 44100, true); d.setUint32(28, 88200, true); d.setUint16(32, 2, true); d.setUint16(34, 16, true); w(36, 'data'); d.setUint32(40, n * 2, true);
+    return URL.createObjectURL(new Blob([b], { type: 'audio/wav' }));
+  }
+  function mediaUnlock() {
+    try {
+      if (!mediaKey) { mediaKey = new Audio(silentWav()); mediaKey.loop = true; mediaKey.setAttribute('playsinline', ''); mediaKey.volume = 0.01; }
+      const p = mediaKey.play(); p && p.catch && p.catch(() => {});
+    } catch {}
+  }
   function unlockBlip() {
+    mediaUnlock();
     try { const b = ctx.createBuffer(1, 1, 22050), s = ctx.createBufferSource(); s.buffer = b; s.connect(ctx.destination); s.start(0); } catch {}
   }
   function onRunning() {
@@ -154,8 +171,8 @@
   }
   function mute(instant) {
     if (!ctx) return;
-    if (instant) { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(0, ctx.currentTime); ctx.suspend(); }
-    else { fadeTo(0, .35); setTimeout(() => !enabled && ctx.suspend(), 400); }
+    if (instant) { master.gain.cancelScheduledValues(ctx.currentTime); master.gain.setValueAtTime(0, ctx.currentTime); ctx.suspend(); mediaKey && mediaKey.pause(); }
+    else { fadeTo(0, .35); setTimeout(() => { if (!enabled) { ctx.suspend(); mediaKey && mediaKey.pause(); } }, 400); }
   }
   const GESTURES = ['pointerdown', 'touchend', 'click', 'keydown'];
   const kick0 = e => {
@@ -171,6 +188,7 @@
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) { mute(true); return; }
     if (!enabled || !started) return;
+    mediaUnlock();
     ctx.resume().then(() => { if (ctx.state === 'running') { fadeTo(LEVEL, .3); SFX.arrive(); } else arm(); }).catch(() => arm());
     if (ctx.state !== 'running') arm(); // phones may need one more tap after returning to the tab
   });

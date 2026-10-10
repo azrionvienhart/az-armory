@@ -51,7 +51,8 @@
   let lastW = innerWidth;
   addEventListener('resize', () => { if (LITE && innerWidth === lastW) return; lastW = innerWidth; size(); });
   addEventListener('pointermove', e => { mouse.tx = e.clientX / innerWidth; mouse.ty = e.clientY / innerHeight; }, { passive: true });
-  addEventListener('scroll', () => { spin += (scrollY - lastY) * .00035; lastY = scrollY; }, { passive: true });
+  let lastScroll = 0;
+  addEventListener('scroll', () => { spin += (scrollY - lastY) * .00035; lastY = scrollY; lastScroll = performance.now(); }, { passive: true });
 
   // a long glowing wedge from the core, used for god-rays and the X streaks
   function ray(ang, len, half, col, alpha) {
@@ -74,7 +75,7 @@
 
   function frame(now) {
     // lite: cap at ~30fps (motion speed stays the same because everything scales by dt)
-    if (LITE && now - last < 31) { if (!reduce) requestAnimationFrame(frame); return; }
+    if (LITE && (now - last < 31 || now - lastScroll < 180)) { if (!reduce) requestAnimationFrame(frame); return; } // phones: freeze while scrolling, ~30fps otherwise
     const dt = Math.min(now - last, 66) / 16.67; last = now;
     mouse.x += (mouse.tx - mouse.x) * .04; mouse.y += (mouse.ty - mouse.y) * .04;
     spin *= .94;
