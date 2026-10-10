@@ -1,0 +1,38 @@
+﻿<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200">
+  <defs>
+    <!-- worn / chipped edges -->
+    <filter id="d" x="-10%" y="-10%" width="120%" height="120%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.06" numOctaves="2" seed="7" result="warp"/>
+      <feDisplacementMap in="SourceGraphic" in2="warp" scale="2.6" xChannelSelector="R" yChannelSelector="G" result="rough"/>
+      <feTurbulence type="fractalNoise" baseFrequency="0.2" numOctaves="3" seed="4" result="n"/>
+      <feColorMatrix in="n" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -22 14.6" result="holes"/>
+      <feComposite in="rough" in2="holes" operator="in"/>
+    </filter>
+    <mask id="cres">
+      <rect width="200" height="200" fill="#fff"/>
+      <circle cx="107" cy="96" r="37" fill="#000"/>
+    </mask>
+  </defs>
+  <g fill="#f4eeee" filter="url(#d)">
+    <!-- main spikes -->
+    <polygon points="100,4 105.5,92 100,196 94.5,108"/>
+    <polygon points="6,101 92,95.5 194,99 108,104.5"/>
+    <!-- crescent, broken at the top-right -->
+    <g mask="url(#cres)">
+      <path d="M134 62 A46 46 0 1 0 145 118 L139 115 A39 39 0 1 1 129 67 Z"/>
+    </g>
+    <!-- A + Z monogram woven through the cross -->
+    <polygon points="100,58 103,64 79,132 74,132"/>
+    <polygon points="100,58 97,64 121,132 126,132"/>
+    <polygon points="84,110 118,107 117,113 83,115"/>
+    <polygon points="72,76 128,72 128,79 72,80"/>
+    <polygon points="128,72 128,79 76,126 70,126"/>
+    <!-- side thorns -->
+    <polygon points="128,72 156,48 132,78"/>
+    <polygon points="72,126 46,150 68,120"/>
+    <polygon points="72,76 58,58 76,74"/>
+    <polygon points="128,126 144,142 124,128"/>
+  </g>
+</svg>
+
+
