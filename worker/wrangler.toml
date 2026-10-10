@@ -3,6 +3,6 @@ main = "worker.js"
 compatibility_date = "2025-09-01"
 
 [vars]
-DISCORD_CLIENT_ID = "PASTE_YOUR_DISCORD_APP_CLIENT_ID"
+DISCORD_CLIENT_ID = "1558392824452481105"
 GUILD_ID = "1138073844779851816"   # Azrion's VOID
 SITE_URL = "https://azrionvienhart.github.io/az-armory"

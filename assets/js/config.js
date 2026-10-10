@@ -14,7 +14,7 @@ window.AZ = {
 
   // Cloudflare Worker that verifies Discord membership (see worker/SETUP.md).
   // Leave '' until it's deployed — the gate then runs in honor mode.
-  workerUrl: '',
+  workerUrl: 'https://azarmory-gate.azrion.workers.dev',
 
   // Fallback if Discord's live member count can't be loaded.
   discordMembersFallback: 6000,
