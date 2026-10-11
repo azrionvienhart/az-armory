@@ -245,7 +245,7 @@ section{position:relative}
 .marquee.tilt{transform:rotate(-2deg) scale(1.05);border-color:rgba(255,45,61,.35);background:linear-gradient(90deg,rgba(40,4,12,.85),rgba(70,6,22,.6) 50%,rgba(40,4,12,.85))}
 .track{display:flex;width:max-content;font-family:var(--f-mono);font-weight:600;font-size:clamp(28px,4.4vw,64px);line-height:1;letter-spacing:.02em;white-space:nowrap;will-change:transform;text-transform:uppercase}
 .track span{display:inline-flex;align-items:center;gap:.55em;padding-right:.55em}
-.track span::after{content:'';width:.42em;height:.42em;flex:none;background:url(../img/azstore-logo.svg) center/contain no-repeat;animation:spin 6s linear infinite;opacity:.9}
+.track span::after{content:'';width:.42em;height:.42em;flex:none;background:url(../img/azarmory-logo.svg) center/contain no-repeat;animation:spin 6s linear infinite;opacity:.9}
 @keyframes spin{to{transform:rotate(360deg)}}
 .track.base{color:rgba(255,255,255,.14)}
 .track.base span::after{opacity:.35}

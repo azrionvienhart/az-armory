@@ -67,7 +67,7 @@
     return u.origin === location.origin && u.pathname !== location.pathname && /\.html$|\/$/.test(u.pathname) && !u.pathname.includes('/app/');
   }
   const wipe = document.createElement('div'); wipe.className = 'pagewipe';
-  wipe.innerHTML = '<img src="assets/img/azstore-logo.svg" alt="">'; document.body.append(wipe);
+  wipe.innerHTML = '<img src="assets/img/azarmory-logo.svg" alt="">'; document.body.append(wipe);
   void wipe.offsetWidth;
   setTimeout(() => wipe.classList.add('out'), 80);
   addEventListener('pageshow', e => { if (e.persisted) { wipe.classList.remove('in'); wipe.classList.add('out'); } });
