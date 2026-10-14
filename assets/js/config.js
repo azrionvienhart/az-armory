@@ -26,21 +26,34 @@ window.AZ = {
   products: {
     azware: {
       name: 'Azware',
-      status: 'soon',                 // 'live' | 'soon' | 'new' | 'updated'  (set 'live' + download when ready)
+      status: 'live',                 // 'live' | 'soon' | 'new' | 'updated'
       version: '1.0',
       category: 'Aim training planner',
       tagline: "Daily aim routines for Roblox Rivals, built from Aimlabs' official scenarios.",
       icon: 'assets/img/azware-icon.png',
       art: 'assets/img/azware-app.png',
       page: 'azware.html',
-      features: ['Aimlabs · KovaaK\'s · Mobile', 'PSA sensitivity', 'Browser trainer'],
+      features: ['PC + Mobile', 'Aimlabs · KovaaK\'s · Mobile drills', 'PSA sensitivity'],
       demo: 'app/azware/index.html',
-      // Paste the YouTube video ID (the part after watch?v=) once the video is out.
-      videoId: '',
-      // Set when the release is ready: 'https://github.com/azrionvienhart/az-armory/releases/latest/download/Azware.zip'
-      download: ''
-    },
-    opticore: {
+      // Each version has its own download + video. The site shows a PC / Mobile picker.
+      // videoId = the part after watch?v= in the YouTube link.
+      platforms: {
+        pc: {
+          label: 'PC', system: 'Windows 10 / 11 (64-bit)', status: 'live', version: '1.0',
+          size: '1.1 MB', format: 'zip',
+          // the file is stored privately on the Cloudflare worker (worker/files) and only handed out after the password + Discord check
+          download: true,
+          videoId: '',
+          perks: ['Desktop app with its own window', '3D aim trainer', 'Progress saved on your PC']
+        },
+        mobile: {
+          label: 'Mobile', system: 'Android & iPhone', status: 'soon',
+          download: '',
+          videoId: '',
+          perks: ['Built for touch', 'Mobile drills for Rivals on phone', 'Same daily quests']
+        }
+      }
+    },    opticore: {
       name: 'OptiCore',
       status: 'soon',
       category: 'PC optimizer',

@@ -7,17 +7,81 @@
 <link rel="icon" type="image/png" sizes="512x512" href="build/icon.png?v=3">
 <link rel="shortcut icon" href="build/icon.ico?v=3">
 <link rel="stylesheet" href="build/fonts/fonts.css">
+<script>(function(){var r=document.documentElement,g=function(k,d){try{var v=JSON.parse(localStorage.getItem('az_'+k));return v||d}catch(e){return d}};r.dataset.theme=g('theme','red');r.dataset.font=g('font','modern')==='monarch'?'monarch':'modern'})()</script>
 <style>
 :root{
   --bg:#060203;--text:#f1e6e6;--mute:#bf9a9a;--dim:#866868;--faint:#5a4444;
-  --line:rgba(255,70,70,.14);--line2:rgba(230,23,24,.5);
-  --panel:linear-gradient(180deg,rgba(28,6,9,.66),rgba(10,3,4,.58));
+  --line:rgba(var(--t),.14);--line2:rgba(230,23,24,.5);
+  --panel:linear-gradient(180deg,rgba(var(--p1),.66),rgba(var(--p2),.58));
   --acc:#e61718;--acc2:#ff4a4a;--a:230,23,24;--b:255,74,74;--c3:255,110,40;--on:#fff;
   --F:#ff3b3b;--T:#f3eeee;--S:#ff9a2e;
-  --serif:'Cinzel',Georgia,serif;--body:'Cormorant Garamond',Georgia,serif;
+  --serif:'AzModHead','Segoe UI',system-ui,sans-serif;--body:'AzModBody','Segoe UI',system-ui,sans-serif;
+  /* theme parts (red = the original look) */
+  --t:255,70,70;--bd:#6a1216;--bd2:#4a1013;--trk:#2a1013;--p0:8,2,3;--p1:28,6,9;--p2:10,3,4;--deep:#0b0304;--rub:#240306;--soft:#ddc9c9;--ov:3,1,2;
   --grad:linear-gradient(120deg,#ff3a3a,#e61718 50%,#8f0a0a);
   --gap:24px;
 }
+/* UI colour themes. The background, embers, logo and wordmark are not themed: they always stay red. */
+html[data-theme="silver"]{
+  --bg0:#24262a;--bg1:#121315;--bg2:#060607;
+  --bg:#0b0b0c;--fog1:rgba(235,238,242,.3);--fog2:rgba(190,195,202,.28);--fog3:rgba(250,251,253,.22);--emberH:0;--emberS:0;
+  --text:#ffffff;--mute:#d3d7dd;--dim:#a6acb4;--faint:#767c84;
+  --line:rgba(235,238,242,.22);--line2:rgba(245,247,250,.6);
+  --panel:linear-gradient(180deg,rgba(52,55,60,.66),rgba(26,28,31,.6));
+  --acc:#eef1f5;--acc2:#ffffff;--a:238,241,245;--b:255,255,255;--on:#16181b;
+  --F:#ffffff;--T:#c9cdd3;--S:#8e949c;
+  --t:235,238,242;--bd:#7d838c;--bd2:#646a72;--trk:#4a4e54;--p0:22,23,26;--p1:46,49,54;--p2:24,26,29;--deep:#17181b;--rub:#3a3d42;--soft:#f1f3f6;--ov:10,10,12;
+}
+html[data-theme="rose"]{
+  --bg0:#1f0812;--bg1:#0c0307;--bg2:#040102;--bg:#070205;
+  --fog1:rgba(255,92,145,.4);--fog2:rgba(176,38,94,.42);--fog3:rgba(255,178,206,.24);--emberH:336;--emberS:100;--emberL:74;
+  --text:#fff3f6;--mute:#e0aebe;--dim:#a27b88;--faint:#6a4c56;
+  --line:rgba(255,140,175,.16);--line2:rgba(255,93,143,.5);
+  --panel:linear-gradient(180deg,rgba(30,9,16,.68),rgba(12,4,7,.6));
+  --acc:#ff5d8f;--acc2:#ffc2d4;--a:255,93,143;--b:255,194,212;--on:#fff;
+  --F:#ff4f86;--T:#ffffff;--S:#ffb3cb;
+  --t:255,140,175;--bd:#6a2338;--bd2:#4c1a29;--trk:#2e1219;--p0:10,3,6;--p1:30,9,16;--p2:12,4,7;--deep:#0d0407;--rub:#2a0814;--soft:#f3d9e1;--ov:4,1,2;
+}
+/* fonts: Modern (Segoe UI, default), Monarch (Cinzel + Cormorant Garamond, the original look).
+   size-adjust keeps body text the same visual size as Cormorant, which runs small. */
+@font-face{font-family:'AzModHead';src:local('Segoe UI'),local('SegoeUI'),local('Roboto'),local('Helvetica Neue');size-adjust:104%}
+@font-face{font-family:'AzModBody';src:local('Segoe UI'),local('SegoeUI'),local('Roboto'),local('Helvetica Neue');size-adjust:88%}
+html[data-font="modern"]{--serif:'AzModHead','Segoe UI',system-ui,sans-serif;--body:'AzModBody','Segoe UI',system-ui,sans-serif}
+html[data-font="monarch"]{--serif:'Cinzel',Georgia,serif;--body:'Cormorant Garamond',Georgia,serif}
+/* Silver is fully monochrome (black / white / silver), so the logo and splash go silver too */
+html[data-theme="silver"] .mark{filter:drop-shadow(0 0 12px rgba(255,255,255,.3))}
+html[data-theme="silver"] .mark img,html[data-theme="silver"] .wm{filter:grayscale(1) brightness(2.3) contrast(1.05)}
+html[data-theme="silver"] .brand h1 span,html[data-theme="silver"] #splash h1 span{color:#e9ecf0}
+html[data-theme="silver"] .brand h1{text-shadow:0 0 22px rgba(255,255,255,.25)}
+html[data-theme="silver"] #splash{background:#030303}
+html[data-theme="silver"] #splash .sp-glow{background:radial-gradient(circle,rgba(225,229,235,.32),transparent 62%)}
+html[data-theme="silver"] #splash .sp-ring{border-color:rgba(240,242,245,.8)}
+html[data-theme="silver"] #splash h1{text-shadow:0 0 30px rgba(255,255,255,.45)}
+html[data-theme="silver"] #splash .sp-line{background:linear-gradient(90deg,transparent,#e8ebef,transparent);box-shadow:0 0 12px #e8ebef}
+html[data-theme="silver"] #splash.go img{animation-name:spLogoS}
+@keyframes spLogoS{0%{opacity:0;transform:scale(.6);filter:grayscale(1) brightness(2.3) blur(14px) drop-shadow(0 0 30px rgba(255,255,255,.6))}60%{opacity:1}100%{opacity:1;transform:scale(1);filter:grayscale(1) brightness(2.3) blur(0) drop-shadow(0 0 26px rgba(255,255,255,.45))}}
+/* Rose is converted the same way: pink background, embers, logo, wordmark and splash */
+html[data-theme="rose"] .mark{filter:drop-shadow(0 0 12px rgba(255,93,143,.6))}
+html[data-theme="rose"] .mark img,html[data-theme="rose"] .wm{filter:hue-rotate(-24deg) saturate(.8) brightness(1.55)}
+html[data-theme="rose"] .brand h1 span,html[data-theme="rose"] #splash h1 span{color:#ff6f9c}
+html[data-theme="rose"] .brand h1{text-shadow:0 0 22px rgba(255,93,143,.5)}
+html[data-theme="rose"] #splash{background:#060104}
+html[data-theme="rose"] #splash .sp-glow{background:radial-gradient(circle,rgba(255,93,143,.5),transparent 62%)}
+html[data-theme="rose"] #splash .sp-ring{border-color:rgba(255,194,212,.85)}
+html[data-theme="rose"] #splash h1{text-shadow:0 0 30px rgba(255,93,143,.75)}
+html[data-theme="rose"] #splash .sp-line{background:linear-gradient(90deg,transparent,#ff8db0,transparent);box-shadow:0 0 12px #ff8db0}
+html[data-theme="rose"] #splash.go img{animation-name:spLogoR}
+@keyframes spLogoR{0%{opacity:0;transform:scale(.6);filter:hue-rotate(-24deg) saturate(.8) brightness(1.55) blur(14px) drop-shadow(0 0 30px rgba(255,93,143,.9))}60%{opacity:1}100%{opacity:1;transform:scale(1);filter:hue-rotate(-24deg) saturate(.8) brightness(1.55) blur(0) drop-shadow(0 0 26px rgba(255,93,143,.8))}}
+/* settings panel */
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+#setFont{grid-template-columns:repeat(2,minmax(0,1fr))}
+.opt{border:1px solid rgba(var(--t),.22);padding:12px 12px 11px;background:rgba(0,0,0,.28);color:var(--mute);text-align:left;transition:.2s}
+.opt:hover{border-color:var(--acc);color:#fff}
+.opt.on{border-color:var(--acc);color:#fff;box-shadow:0 0 14px rgba(var(--a),.4);background:rgba(var(--a),.14)}
+.opt b{display:block;font-size:21px;font-weight:600;color:#fff;line-height:1.15}
+.opt small{display:block;font-family:var(--body);font-size:14px;margin-top:4px;line-height:1.2}
+.opt .sw{display:flex;gap:6px;margin:4px 0 8px 3px}.opt .sw i{width:13px;height:13px;transform:rotate(45deg)}
+@media (max-width:520px){.opts{grid-template-columns:minmax(0,1fr)}}
 *{box-sizing:border-box;margin:0;padding:0;scrollbar-width:none}
 *::-webkit-scrollbar{width:0;height:0;display:none}
 html,body{height:100%}
@@ -27,11 +91,11 @@ a{color:var(--acc2)}
 .mono{font-family:var(--serif);letter-spacing:1px}
 
 /* ---------- animated background ---------- */
-.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,#140405 0%,#070203 55%,#030102 100%)}
+.bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:radial-gradient(120% 90% at 50% 40%,var(--bg0,#140405) 0%,var(--bg1,#070203) 55%,var(--bg2,#030102) 100%)}
 .fog{position:absolute;border-radius:50%;filter:blur(90px);opacity:.55;mix-blend-mode:screen;will-change:transform}
-.fog.f1{width:58vw;height:58vw;left:-14vw;top:-22vw;background:radial-gradient(circle,rgba(170,10,16,.55),transparent 65%);animation:drift1 38s ease-in-out infinite alternate}
-.fog.f2{width:50vw;height:50vw;right:-16vw;top:18vh;background:radial-gradient(circle,rgba(120,6,12,.55),transparent 65%);animation:drift2 46s ease-in-out infinite alternate}
-.fog.f3{width:64vw;height:42vw;left:18vw;bottom:-26vw;background:radial-gradient(circle,rgba(200,30,20,.38),transparent 65%);animation:drift3 52s ease-in-out infinite alternate}
+.fog.f1{width:58vw;height:58vw;left:-14vw;top:-22vw;background:radial-gradient(circle,var(--fog1,rgba(170,10,16,.55)),transparent 65%);animation:drift1 38s ease-in-out infinite alternate}
+.fog.f2{width:50vw;height:50vw;right:-16vw;top:18vh;background:radial-gradient(circle,var(--fog2,rgba(120,6,12,.55)),transparent 65%);animation:drift2 46s ease-in-out infinite alternate}
+.fog.f3{width:64vw;height:42vw;left:18vw;bottom:-26vw;background:radial-gradient(circle,var(--fog3,rgba(200,30,20,.38)),transparent 65%);animation:drift3 52s ease-in-out infinite alternate}
 @keyframes drift1{to{transform:translate(18vw,14vh) scale(1.15)}}
 @keyframes drift2{to{transform:translate(-22vw,-10vh) scale(.9)}}
 @keyframes drift3{to{transform:translate(-12vw,-12vh) scale(1.2)}}
@@ -44,15 +108,15 @@ a{color:var(--acc2)}
 
 /* ---------- app frame ---------- */
 .app{height:100vh;display:grid;grid-template-rows:auto minmax(0,1fr)}
-.topbar{display:grid;grid-template-columns:minmax(260px,1fr) auto minmax(260px,1fr);align-items:center;gap:var(--gap);padding:14px 32px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(8,2,3,.85),rgba(8,2,3,.55));backdrop-filter:blur(10px);position:relative;z-index:5}
+.topbar{display:grid;grid-template-columns:auto minmax(0,1fr) auto;align-items:center;gap:var(--gap);padding:14px 32px;border-bottom:1px solid var(--line);background:linear-gradient(180deg,rgba(var(--p0),.85),rgba(var(--p0),.55));backdrop-filter:blur(10px);position:relative;z-index:5}
 .topbar:after{content:"";position:absolute;left:0;right:0;bottom:-1px;height:1px;background:linear-gradient(90deg,transparent,rgba(var(--a),.7),transparent);opacity:.6}
 .brand{display:flex;align-items:center;gap:14px}
-.mark{width:44px;height:44px;filter:drop-shadow(0 0 12px rgba(var(--a),.7))}
+.mark{width:44px;height:44px;filter:drop-shadow(0 0 12px rgba(230,23,24,.7))}
 .mark img{width:100%;height:100%}
 .brand h1{font-family:var(--serif);font-size:26px;letter-spacing:9px;font-weight:700;line-height:1;text-shadow:0 0 22px rgba(var(--a),.55)}
-.brand h1 span{color:var(--acc)}
+.brand h1 span{color:#e61718}
 .brand small{display:block;font-size:15px;letter-spacing:2px;color:var(--mute);font-style:italic;margin-top:5px}
-.week{display:flex;gap:2px;justify-content:center}
+.week{display:flex;flex-wrap:wrap;gap:2px;justify-content:center}
 .pill{font-family:var(--serif);font-size:13px;letter-spacing:3px;color:var(--dim);padding:9px 14px 8px;position:relative;transition:color .2s;text-align:center;min-width:64px}
 .pill small{display:block;font-family:var(--body);font-size:13px;letter-spacing:1px;color:var(--faint);margin-top:2px}
 .pill:hover{color:#fff}
@@ -60,12 +124,14 @@ a{color:var(--acc2)}
 .pill.sel:after{content:"";position:absolute;left:18%;right:18%;bottom:0;height:2px;background:var(--acc);box-shadow:0 0 10px var(--acc)}
 .pill.today:before{content:"";position:absolute;top:5px;right:10px;width:5px;height:5px;background:var(--acc);transform:rotate(45deg);box-shadow:0 0 8px var(--acc)}
 .actions{display:flex;gap:8px;justify-content:flex-end}
-.act{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:12px;letter-spacing:2.5px;color:var(--mute);border:1px solid rgba(255,70,70,.22);padding:10px 14px;background:rgba(20,4,6,.5);transition:.2s;white-space:nowrap}
+.act{display:flex;align-items:center;gap:8px;font-family:var(--serif);font-size:12px;letter-spacing:2.5px;color:var(--mute);border:1px solid rgba(var(--t),.22);padding:10px 14px;background:rgba(var(--p1),.5);transition:.2s;white-space:nowrap}
 .act svg{width:16px;height:16px;flex:none}
 .act:hover{color:#fff;border-color:var(--acc);box-shadow:0 0 16px rgba(var(--a),.35);background:rgba(var(--a),.12)}
 .act.primary{color:#fff;border-color:var(--acc);background:rgba(var(--a),.2)}
 .act.icon{padding:10px 11px}
 .act[aria-pressed="false"]{color:var(--faint)}
+.act.actlock{filter:blur(1.2px);opacity:.45;cursor:not-allowed}
+.act.actlock:hover{color:var(--mute);border-color:rgba(var(--t),.22);box-shadow:none;background:rgba(var(--p1),.5)}
 
 .main{display:grid;grid-template-columns:clamp(290px,19vw,360px) minmax(0,1fr) clamp(300px,20vw,380px);gap:var(--gap);padding:var(--gap) 32px;min-height:0}
 .col{min-height:0;overflow:auto;display:flex;flex-direction:column;gap:18px}
@@ -83,13 +149,13 @@ a{color:var(--acc2)}
 .ps:after{content:"";position:absolute;right:-1px;bottom:-1px;width:14px;height:14px;border-right:2px solid var(--acc);border-bottom:2px solid var(--acc)}
 .id{display:flex;gap:14px;align-items:center;margin-bottom:10px}
 .badge{width:64px;height:72px;flex:none;display:grid;place-items:center;font-family:var(--serif);font-size:34px;font-weight:700;color:var(--acc2);text-shadow:0 0 16px var(--acc);background:rgba(var(--a),.55);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);position:relative}
-.badge:before{content:"";position:absolute;inset:2px;background:#0b0203;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.badge:before{content:"";position:absolute;inset:2px;background:var(--deep);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
 .badge b{position:relative;font-weight:700}
 .id strong{display:block;font-family:var(--serif);font-size:19px;letter-spacing:2px;line-height:1.15;word-break:break-word}
 .id span{font-size:16px;color:var(--mute);font-style:italic}
-.row{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--serif);font-size:11px;letter-spacing:3px;padding:8px 0;border-bottom:1px solid rgba(255,80,80,.1);color:var(--mute)}
+.row{display:flex;justify-content:space-between;align-items:baseline;font-family:var(--serif);font-size:11px;letter-spacing:3px;padding:8px 0;border-bottom:1px solid rgba(var(--t),.1);color:var(--mute)}
 .row i{font-style:normal;color:var(--acc2);font-size:14px;letter-spacing:1.5px}
-.exp{height:3px;background:#2a1013;margin:14px 0 6px;position:relative}.exp i{position:absolute;left:0;top:-1px;height:5px;background:var(--acc);box-shadow:0 0 10px var(--acc);width:0;transition:width .5s}
+.exp{height:3px;background:var(--trk);margin:14px 0 6px;position:relative}.exp i{position:absolute;left:0;top:-1px;height:5px;background:var(--acc);box-shadow:0 0 10px var(--acc);width:0;transition:width .5s}
 .expl{display:flex;justify-content:space-between;font-family:var(--serif);font-size:10px;letter-spacing:3px;color:var(--dim)}
 
 /* sliders */
@@ -97,28 +163,28 @@ a{color:var(--acc2)}
 .pl{display:flex;justify-content:space-between;font-family:var(--serif);font-size:12px;letter-spacing:3px}
 .pl .v{color:#fff;font-weight:600}
 .pri input{-webkit-appearance:none;appearance:none;width:100%;height:20px;background:transparent;margin-top:2px;cursor:pointer}
-.pri input::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,var(--cc) 0 var(--pct,0%),#3a1013 var(--pct,0%))}
+.pri input::-webkit-slider-runnable-track{height:2px;background:linear-gradient(90deg,var(--cc) 0 var(--pct,0%),var(--trk) var(--pct,0%))}
 .pri input::-webkit-slider-thumb{-webkit-appearance:none;width:13px;height:13px;margin-top:-5.5px;background:var(--cc);transform:rotate(45deg);box-shadow:0 0 12px var(--cc);transition:transform .15s}
 .pri input:active::-webkit-slider-thumb{transform:rotate(45deg) scale(1.35)}
 
 /* controls */
 .seg{display:flex;flex-wrap:wrap;gap:6px}
-.seg button{font-family:var(--body);font-size:17px;border:1px solid rgba(255,70,70,.2);padding:4px 12px;color:var(--mute);transition:.2s;background:rgba(0,0,0,.25)}
+.seg button{font-family:var(--body);font-size:17px;border:1px solid rgba(var(--t),.2);padding:4px 12px;color:var(--mute);transition:.2s;background:rgba(0,0,0,.25)}
 .seg button:hover{color:#fff;border-color:var(--acc)}
 .seg button.on{border-color:var(--acc);color:#fff;box-shadow:0 0 12px rgba(var(--a),.45);background:rgba(var(--a),.16)}
-input[type=text],textarea{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(255,70,70,.2);color:var(--text);padding:9px 12px;font-family:var(--body);font-size:17px;outline:none;transition:.2s}
+input[type=text],textarea{width:100%;background:rgba(0,0,0,.35);border:1px solid rgba(var(--t),.2);color:var(--text);padding:9px 12px;font-family:var(--body);font-size:17px;outline:none;transition:.2s}
 input[type=text]:focus,textarea:focus{border-color:var(--acc);box-shadow:0 0 12px rgba(var(--a),.25)}
 textarea{resize:none;height:88px;font-style:italic}
 .btn{font-family:var(--serif);letter-spacing:4px;font-size:12px;border:1px solid var(--acc);padding:11px 22px;color:#fff;background:rgba(var(--a),.18);box-shadow:0 0 18px rgba(var(--a),.25);transition:.2s;white-space:nowrap}
 .btn:hover{background:rgba(var(--a),.32);box-shadow:0 0 26px rgba(var(--a),.5)}
 .btn:active{transform:scale(.98)}
-.btn.ghost{background:rgba(0,0,0,.35);border-color:#6a1216;box-shadow:none;color:var(--mute)}
+.btn.ghost{background:rgba(0,0,0,.35);border-color:var(--bd);box-shadow:none;color:var(--mute)}
 .btn.ghost:hover{color:#fff;border-color:var(--acc)}
 .btn.sm{padding:9px 18px;font-size:11px;letter-spacing:3px;margin-top:10px}
-.coach{padding:10px 12px;font-size:16px;color:#ddc9c9;line-height:1.3;margin-top:12px;display:none;border:1px solid rgba(255,70,70,.2);background:rgba(var(--a),.06)}
+.coach{padding:10px 12px;font-size:16px;color:var(--soft);line-height:1.3;margin-top:12px;display:none;border:1px solid rgba(var(--t),.2);background:rgba(var(--a),.06)}
 .coach b{color:var(--acc2)}
 .wgrid{display:flex;flex-wrap:wrap;gap:6px}
-.w{font-family:var(--body);font-size:16.5px;border:1px solid rgba(255,70,70,.18);padding:4px 10px;color:var(--mute);transition:.2s;display:flex;gap:6px;align-items:center;background:rgba(0,0,0,.25)}
+.w{font-family:var(--body);font-size:16.5px;border:1px solid rgba(var(--t),.18);padding:4px 10px;color:var(--mute);transition:.2s;display:flex;gap:6px;align-items:center;background:rgba(0,0,0,.25)}
 .w span{font-size:14px}
 .w:hover{color:#fff;border-color:var(--acc)}
 .w.on{border-color:var(--acc);color:#fff;box-shadow:0 0 12px rgba(var(--a),.45);background:rgba(var(--a),.16)}
@@ -130,34 +196,34 @@ textarea{resize:none;height:88px;font-style:italic}
 .hero p{font-size:18px;color:var(--mute);font-style:italic;margin-top:4px}
 .hstat{display:flex;flex-direction:column;align-items:flex-end;gap:14px;padding-bottom:14px;min-width:min(380px,45%)}
 .chips{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end}
-.chip{font-family:var(--serif);font-size:10.5px;letter-spacing:2.5px;border:1px solid rgba(255,70,70,.22);padding:6px 11px;color:var(--mute);background:rgba(0,0,0,.25)}
+.chip{font-family:var(--serif);font-size:10.5px;letter-spacing:2.5px;border:1px solid rgba(var(--t),.22);padding:6px 11px;color:var(--mute);background:rgba(0,0,0,.25)}
 .chip b{color:#fff;font-weight:600}
-.prog{width:100%;height:2px;background:#2a1013;position:relative}
+.prog{width:100%;height:2px;background:var(--trk);position:relative}
 .prog i{position:absolute;left:0;top:-1px;height:4px;width:calc(var(--p,0)*1%);background:var(--acc);box-shadow:0 0 12px var(--acc);transition:width .5s}
 .prog b{position:absolute;right:0;top:9px;font-family:var(--serif);font-size:11px;letter-spacing:3px;color:var(--mute);font-weight:600}
 #routine{flex:1;min-height:0;display:flex;flex-direction:column;gap:10px}
 .cols{flex:1;min-height:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}
 .colq{display:flex;flex-direction:column;min-height:0}
 .colh{display:flex;align-items:center;gap:12px;padding:0 2px 10px;border-bottom:1px solid var(--line);margin-bottom:12px}
-.colh .ic{width:28px;height:28px;display:grid;place-items:center;border:1px solid rgba(255,70,70,.3);color:var(--c);font-size:13px;transform:rotate(45deg)}
+.colh .ic{width:28px;height:28px;display:grid;place-items:center;border:1px solid rgba(var(--t),.3);color:var(--c);font-size:13px;transform:rotate(45deg)}
 .colh .ic b{transform:rotate(-45deg);font-weight:400}
 .colh h3{font-family:var(--serif);font-size:13px;letter-spacing:4px;font-weight:600;color:#fff}
 .colh span{margin-left:auto;font-family:var(--serif);font-size:11px;letter-spacing:2px;color:var(--dim)}
 .colq.F{--c:var(--F)}.colq.T{--c:var(--T)}.colq.S{--c:var(--S)}
 .list{flex:1;min-height:0;overflow:auto;display:flex;flex-direction:column;gap:12px;padding-bottom:6px}
 .empty{font-size:16px;color:var(--faint);font-style:italic;padding:18px 4px;line-height:1.3}
-.q{--c:var(--T);position:relative;background:linear-gradient(180deg,rgba(26,6,8,.7),rgba(12,3,4,.62));border:1px solid var(--line);padding:14px 16px 12px 18px;transition:transform .2s,border-color .2s,box-shadow .2s;backdrop-filter:blur(6px)}
+.q{--c:var(--T);position:relative;background:linear-gradient(180deg,rgba(var(--p1),.7),rgba(var(--p2),.62));border:1px solid var(--line);padding:14px 16px 12px 18px;transition:transform .2s,border-color .2s,box-shadow .2s;backdrop-filter:blur(6px)}
 #routine.anim .q{animation:qin .45s both}
 .q:before{content:"";position:absolute;left:0;top:0;bottom:0;width:2px;background:var(--c);box-shadow:0 0 10px var(--c);opacity:.8}
-.q:hover{transform:translateY(-2px);border-color:rgba(255,70,70,.4);box-shadow:0 10px 30px -12px rgba(var(--a),.6)}
+.q:hover{transform:translateY(-2px);border-color:rgba(var(--t),.4);box-shadow:0 10px 30px -12px rgba(var(--a),.6)}
 .q.F{--c:var(--F)}.q.T{--c:var(--T)}.q.S{--c:var(--S)}
 @keyframes qin{from{opacity:0;transform:translateY(8px)}}
 .qtop{display:flex;align-items:center;gap:10px}
 .q .n{font-family:var(--serif);font-size:15px;color:var(--acc);text-shadow:0 0 10px rgba(var(--a),.7);min-width:26px}
-.gs{font-family:var(--serif);font-size:9.5px;letter-spacing:2.5px;color:var(--dim);border:1px solid rgba(255,70,70,.2);padding:2px 7px}
-.chk{margin-left:auto;width:24px;height:24px;border:1px solid #6a1216;display:grid;place-items:center;color:transparent;font-size:14px;transition:.2s;flex:none}
+.gs{font-family:var(--serif);font-size:9.5px;letter-spacing:2.5px;color:var(--dim);border:1px solid rgba(var(--t),.2);padding:2px 7px}
+.chk{margin-left:auto;width:24px;height:24px;border:1px solid var(--bd);display:grid;place-items:center;color:transparent;font-size:14px;transition:.2s;flex:none}
 .chk:hover{border-color:var(--acc);box-shadow:0 0 10px rgba(var(--a),.4)}
-.q.done .chk{background:var(--acc);border-color:var(--acc);color:#fff;box-shadow:0 0 12px var(--acc)}
+.q.done .chk{background:var(--acc);border-color:var(--acc);color:var(--on);box-shadow:0 0 12px var(--acc)}
 .qt{font-family:var(--serif);font-size:16.5px;font-weight:600;letter-spacing:1px;line-height:1.25;margin:8px 0 5px}
 .qd{font-size:16px;color:var(--mute);line-height:1.28;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
 .play{font-family:var(--serif);font-size:10px;letter-spacing:3px;color:var(--acc2);margin-top:9px;opacity:.75;transition:.2s}
@@ -172,6 +238,8 @@ textarea{resize:none;height:88px;font-style:italic}
 .colh .ic{transform:none;border:0;width:30px;height:30px}
 .colh .ic .ico{width:24px;height:24px;color:var(--c);filter:drop-shadow(0 0 6px var(--c))}
 .play{display:inline-flex;align-items:center;gap:6px}.play .ico{width:10px;height:10px}
+/* touch screens: bigger tap areas without changing the look */
+@media (pointer:coarse){.chk{position:relative}.chk::after{content:"";position:absolute;inset:-12px}.play{padding:14px 14px 14px 0;margin:-5px 0 -14px}}
 .ico.inl{width:14px;height:14px;vertical-align:-2px}
 /* focus pie */
 .pie{display:flex;align-items:center;gap:18px;margin-top:6px;padding-top:14px;border-top:1px solid var(--line)}
@@ -191,51 +259,62 @@ textarea{resize:none;height:88px;font-style:italic}
 @keyframes expup{0%{opacity:0;margin-top:8px}15%{opacity:1;margin-top:-4px}100%{opacity:0;margin-top:-58px}}
 .exp i.pulse{animation:expulse .9s}
 @keyframes expulse{0%{box-shadow:0 0 0 0 var(--acc)}50%{box-shadow:0 0 22px 7px var(--acc)}100%{box-shadow:0 0 10px var(--acc)}}
-.rankup{position:fixed;inset:0;z-index:90;display:none;place-items:center;background:radial-gradient(600px 400px at 50% 50%,rgba(var(--a),.4),rgba(3,1,2,.93) 70%);cursor:pointer}
+.rankup{position:fixed;inset:0;z-index:90;display:none;place-items:center;background:radial-gradient(600px 400px at 50% 50%,rgba(var(--a),.4),rgba(var(--ov),.93) 70%);cursor:pointer}
 .rankup.on{display:grid;animation:ruflash .5s ease-out}
 @keyframes ruflash{0%{background-color:#fff}100%{background-color:transparent}}
-.ru-box{width:min(460px,90vw);text-align:center;padding:38px 30px 30px;border:1px solid var(--line2);background:linear-gradient(180deg,#240306,#070102);box-shadow:0 0 80px rgba(var(--a),.5),inset 0 0 40px rgba(var(--a),.1);position:relative;animation:ruin .6s cubic-bezier(.2,1.3,.4,1)}
+.ru-box{width:min(460px,90vw);text-align:center;padding:38px 30px 30px;border:1px solid var(--line2);background:linear-gradient(180deg,var(--rub),#070102);box-shadow:0 0 80px rgba(var(--a),.5),inset 0 0 40px rgba(var(--a),.1);position:relative;animation:ruin .6s cubic-bezier(.2,1.3,.4,1)}
 .ru-box:before,.ru-box:after{content:"";position:absolute;width:22px;height:22px;border:2px solid var(--acc2)}
 .ru-box:before{left:-6px;top:-6px;border-right:0;border-bottom:0}.ru-box:after{right:-6px;bottom:-6px;border-left:0;border-top:0}
 @keyframes ruin{0%{opacity:0;transform:scale(.7)}100%{opacity:1;transform:scale(1)}}
 .ru-sys{font-family:var(--serif);font-size:12px;letter-spacing:8px;color:var(--acc2)}
 .ru-h{font-family:var(--serif);font-size:34px;letter-spacing:10px;font-weight:700;margin:10px 0 22px;padding-left:10px;text-shadow:0 0 26px var(--acc)}
 .ru-badge{width:128px;height:142px;margin:0 auto 20px;display:grid;place-items:center;background:var(--acc);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);position:relative;filter:drop-shadow(0 0 22px var(--acc))}
-.ru-badge:before{content:"";position:absolute;inset:3px;background:#0a0102;clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
+.ru-badge:before{content:"";position:absolute;inset:3px;background:var(--deep);clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%)}
 .ru-badge b{position:relative;font-family:var(--serif);font-size:70px;font-weight:700;color:var(--acc2);text-shadow:0 0 24px var(--acc)}
 .ru-t{font-family:var(--serif);font-size:22px;letter-spacing:5px}
 .ru-s{font-size:19px;color:var(--mute);font-style:italic;margin-top:8px}
 .ru-n{font-family:var(--serif);font-size:10px;letter-spacing:4px;color:var(--dim);margin-top:22px}
 
 /* modals */
-.ov{position:fixed;inset:0;background:rgba(3,1,2,.82);backdrop-filter:blur(6px);display:none;z-index:50;align-items:center;justify-content:center;padding:14px}
+.ov{position:fixed;inset:0;background:rgba(var(--ov),.82);backdrop-filter:blur(6px);display:none;z-index:50;align-items:center;justify-content:center;padding:14px}
 .ov.on{display:flex}
-.box{background:#0a0203;border:1px solid var(--line2);padding:22px;width:min(920px,100%);max-height:100%;overflow:auto;box-shadow:0 0 60px rgba(var(--a),.25);position:relative}
+.box{background:var(--deep);border:1px solid var(--line2);padding:22px;width:min(920px,100%);max-height:100%;overflow:auto;box-shadow:0 0 60px rgba(var(--a),.25);position:relative}
 .box.sm{width:min(560px,100%)}
 .bh{display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;gap:8px;flex-wrap:wrap}
 .bh b{font-family:var(--serif);letter-spacing:4px;font-size:15px;font-weight:600}
 .cfg{display:flex;gap:16px;flex-wrap:wrap;font-family:var(--serif);font-size:12px;letter-spacing:2px;color:var(--mute);margin-bottom:14px;align-items:center}
 .cfg label{display:flex;gap:8px;align-items:center}.cfg input{accent-color:var(--acc);width:90px}
-.cfg input[type=number]{background:#0c0405;color:#fff;border:1px solid #5a1216;padding:5px 8px;font-family:var(--body);font-size:17px;outline:none}.cfg input[type=number]:focus{border-color:var(--acc)}
-.cfg select{background:#0c0405;color:#fff;border:1px solid #5a1216;padding:5px;font-family:var(--body);font-size:17px}
-canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(--line);display:block;touch-action:none;cursor:none}
+.cfg input[type=number]{background:var(--deep);color:#fff;border:1px solid var(--bd);padding:5px 8px;font-family:var(--body);font-size:17px;outline:none}.cfg input[type=number]:focus{border-color:var(--acc)}
+.cfg select{background:var(--deep);color:#fff;border:1px solid var(--bd);padding:5px;font-family:var(--body);font-size:17px}
+canvas#cv{width:100%;aspect-ratio:16/9;background:transparent;border:1px solid var(--line);display:block;touch-action:none;cursor:none;position:relative;z-index:1}
+canvas#gl{position:absolute;inset:1px;width:calc(100% - 2px);height:calc(100% - 2px);display:block;background:#1d2026}
+#trStage:fullscreen canvas#gl{inset:0;width:100%;height:100%}
+body.trn .bg{display:none}
+body.trn #tr{backdrop-filter:none;background:rgba(var(--ov),.97)}
 #trStage{position:relative}
 #trStage:fullscreen{background:#000;display:grid;place-items:center}
 #trStage:fullscreen canvas#cv{width:100vw;height:100vh;aspect-ratio:auto;border:0}
-.fsx{display:none;position:absolute;top:14px;right:14px;font-family:var(--serif);font-size:11px;letter-spacing:3px;color:var(--mute);border:1px solid rgba(255,70,70,.35);background:rgba(0,0,0,.5);padding:8px 12px}
+/* phones without element full screen (iPhone) get a fixed overlay instead */
+#trStage.pfs{position:fixed;inset:0;z-index:300;background:#000}
+#trStage.pfs canvas#cv{width:100%;height:100%;aspect-ratio:auto;border:0}
+#trStage.pfs canvas#gl{inset:0;width:100%;height:100%}
+#trStage.pfs .fsx{display:block}
+.cfg select{max-width:100%;min-width:0}
+@media (max-width:640px){.cfg label.pl{flex:1 1 100%;min-width:0}.cfg label.pl select{flex:1;width:0}}
+.fsx{display:none;position:absolute;z-index:2;bottom:calc(14px + env(safe-area-inset-bottom));right:calc(14px + env(safe-area-inset-right));font-family:var(--serif);font-size:11px;letter-spacing:3px;color:var(--mute);border:1px solid rgba(var(--t),.35);background:rgba(0,0,0,.5);padding:8px 12px}
 #trStage:fullscreen .fsx{display:block}
 .locked{flex:1;display:grid;place-items:center;text-align:center;padding:40px}
 .locked .lk{width:64px;height:64px;margin:0 auto 18px;color:var(--acc2);filter:drop-shadow(0 0 10px rgba(var(--a),.6))}
 .locked h3{font-family:var(--serif);font-size:26px;letter-spacing:6px;font-weight:600}
 .locked p{color:var(--mute);font-size:19px;font-style:italic;margin-top:10px}
-.stat{display:flex;gap:20px;margin-top:12px;font-size:19px;color:#ddc9c9;flex-wrap:wrap}.stat b{color:var(--acc2);font-family:var(--serif)}
+.stat{display:flex;gap:20px;margin-top:12px;font-size:19px;color:var(--soft);flex-wrap:wrap}.stat b{color:var(--acc2);font-family:var(--serif)}
 .pf{display:flex;gap:12px;flex-wrap:wrap;margin:12px 0}.pf label{font-family:var(--serif);font-size:11px;letter-spacing:3px;color:var(--mute);display:flex;flex-direction:column;gap:7px;flex:1;min-width:150px}
-.pf input{background:rgba(0,0,0,.4);border:1px solid #4a1013;color:#fff;padding:10px;font-family:var(--body);font-size:19px;outline:none}
+.pf input{background:rgba(0,0,0,.4);border:1px solid var(--bd2);color:#fff;padding:10px;font-family:var(--body);font-size:19px;outline:none}
 .pf input:focus{border-color:var(--acc)}
-.pk{display:flex;gap:12px;margin:16px 0}.pk button{flex:1;padding:20px 8px;background:rgba(0,0,0,.35);border:1px solid #5a1216;font-size:30px;font-family:var(--serif);font-weight:600;transition:.2s}
+.pk{display:flex;gap:12px;margin:16px 0}.pk button{flex:1;padding:20px 8px;background:rgba(0,0,0,.35);border:1px solid var(--bd);font-size:30px;font-family:var(--serif);font-weight:600;transition:.2s}
 .pk button small{display:block;font-size:11px;letter-spacing:4px;color:var(--mute);margin-bottom:8px}
 .pk button:hover{border-color:var(--acc);background:rgba(var(--a),.2);box-shadow:0 0 20px rgba(var(--a),.35)}
-.steps{display:flex;gap:6px;margin:8px 0}.steps i{flex:1;height:2px;background:#3a1013}.steps i.on{background:var(--acc);box-shadow:0 0 8px var(--acc)}
+.steps{display:flex;gap:6px;margin:8px 0}.steps i{flex:1;height:2px;background:var(--trk)}.steps i.on{background:var(--acc);box-shadow:0 0 8px var(--acc)}
 .res{border:1px solid var(--line2);background:rgba(var(--a),.08);padding:18px;font-size:19px;line-height:1.45}
 .res b{color:var(--acc2);font-size:38px;font-family:var(--serif);text-shadow:0 0 18px rgba(var(--a),.6)}
 
@@ -246,7 +325,7 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
 #splash .sp-in{position:relative;text-align:center}
 #splash img{width:min(26vmin,200px);height:auto;opacity:0;transform:scale(.6);filter:blur(14px) drop-shadow(0 0 30px rgba(230,23,24,.9))}
 #splash h1{font-family:var(--serif);font-size:min(7vmin,58px);font-weight:700;letter-spacing:1.6em;margin:18px 0 0 1.6em;opacity:0;text-shadow:0 0 30px rgba(230,23,24,.8)}
-#splash h1 span{color:var(--acc)}
+#splash h1 span{color:#e61718}
 #splash .sp-line{height:1px;width:0;margin:16px auto 0;background:linear-gradient(90deg,transparent,#ff3a3a,transparent);box-shadow:0 0 12px #ff3a3a}
 #splash p{font-size:min(3vmin,20px);letter-spacing:6px;color:var(--mute);font-style:italic;margin-top:14px;opacity:0}
 #splash.go .sp-glow{animation:spGlow 2.2s ease-out forwards}
@@ -265,6 +344,11 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
 @keyframes spOut{to{opacity:0;transform:scale(1.06);filter:blur(6px)}}
 
 /* ---------- responsive ---------- */
+/* narrower desktop windows: logo + buttons on one row, the week strip on its own row under them */
+@media (max-width:1560px){
+  .topbar{grid-template-columns:auto minmax(0,1fr);grid-template-areas:"brand actions" "week week";row-gap:6px;padding-top:12px;padding-bottom:8px}
+  .brand{grid-area:brand}.week{grid-area:week}.actions{grid-area:actions}
+}
 @media (max-width:1380px){
   .cols{grid-template-columns:minmax(0,1fr)}
   .list{overflow:visible}.center{overflow:auto}
@@ -272,7 +356,7 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
 @media (max-width:1180px), (max-height:700px){
   body{overflow:auto}.app{height:auto;min-height:100vh}
   .main{grid-template-columns:minmax(0,1fr);padding:18px}.col,.center{overflow:visible}
-  .topbar{grid-template-columns:1fr;justify-items:center;padding:14px 16px}.actions{flex-wrap:wrap;justify-content:center}.week{flex-wrap:wrap}
+  .topbar{grid-template-columns:1fr;grid-template-areas:"brand" "week" "actions";justify-items:center;padding:14px 16px}.actions{flex-wrap:wrap;justify-content:center}.week{flex-wrap:wrap}
   .hero{flex-direction:column;align-items:flex-start}.hstat{align-items:flex-start;width:100%}.chips{justify-content:flex-start}
 }
 </style>
@@ -290,8 +374,9 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
     <nav class="week" id="days"></nav>
     <div class="actions">
       <button class="act" id="psaOpen" title="Find your sensitivity (PSA)"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="8"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4"/><circle cx="12" cy="12" r="1.5" fill="currentColor"/></svg>SENSITIVITY</button>
-      <button class="act" id="free" title="Built-in browser trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 5l12 7-12 7z"/></svg>TRAINER</button>
+      <button class="act" id="free" title="Built-in trainer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M7 5l12 7-12 7z"/></svg>TRAINER</button>
       <button class="act primary" id="copy" title="Copy today's playlist"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="8" y="8" width="12" height="12"/><path d="M4 16V4h12"/></svg><span class="lbl">COPY PLAYLIST</span></button>
+      <button class="act icon" id="setOpen" title="Settings: font and colour"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="7"/><path d="M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1"/></svg></button>
       <button class="act icon" id="snd" title="Sound on/off" aria-pressed="true"></button>
     </div>
   </header>
@@ -314,7 +399,7 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
         <div id="pri"></div>
         <div class="help">Drag one — the others rebalance.</div>
         <div class="pie">
-          <div class="mid"><svg class="chart" viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.915" fill="none" stroke="#2a0d10" stroke-width="2.8"/><circle class="seg" id="pieF" cx="21" cy="21" r="15.915" style="color:var(--F);stroke:var(--F)"/><circle class="seg" id="pieT" cx="21" cy="21" r="15.915" style="color:var(--T);stroke:var(--T)"/><circle class="seg" id="pieS" cx="21" cy="21" r="15.915" style="color:var(--S);stroke:var(--S)"/></svg><b><span id="pieTot">100%</span><small>TOTAL</small></b></div>
+          <div class="mid"><svg class="chart" viewBox="0 0 42 42"><circle cx="21" cy="21" r="15.915" fill="none" style="stroke:var(--trk)" stroke-width="2.8"/><circle class="seg" id="pieF" cx="21" cy="21" r="15.915" style="color:var(--F);stroke:var(--F)"/><circle class="seg" id="pieT" cx="21" cy="21" r="15.915" style="color:var(--T);stroke:var(--T)"/><circle class="seg" id="pieS" cx="21" cy="21" r="15.915" style="color:var(--S);stroke:var(--S)"/></svg><b><span id="pieTot">100%</span><small>TOTAL</small></b></div>
           <div class="lg"><div style="--cc:var(--F)"><i></i>FLICK<span id="lgF">0%</span></div><div style="--cc:var(--T)"><i></i>TRACK<span id="lgT">0%</span></div><div style="--cc:var(--S)"><i></i>SWITCH<span id="lgS">0%</span></div></div>
         </div>
       </section>
@@ -363,9 +448,10 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
 <div class="ov" id="tr"><div class="box">
   <div class="bh"><b>BUILT-IN TRAINER</b><button class="btn ghost sm" id="trClose" style="margin:0">CLOSE</button></div>
   <div class="cfg">
-    <label>PLAYLIST <select id="plist"></select></label>
-    <label>ROBLOX SENS <input type="number" id="tSens" step="any" min="0.001" style="width:84px" placeholder="0.5"></label>
+    <label class="pl">PLAYLIST <select id="plist"></select></label>
+    <label id="tSensL">ROBLOX SENS <input type="number" id="tSens" step="any" min="0.001" style="width:84px" placeholder="0.5"></label>
     <label>FOV <input type="number" id="tFov" step="1" min="40" max="120" style="width:64px"></label>
+    <label id="tTouchL" style="display:none" title="Mobile: set this to your Rivals Camera Sensitivity %">RIVALS SENS <input type="range" id="tTouch" min="0" max="200" step="1" style="width:140px"><span id="tTouchV">100%</span></label>
     <button class="btn sm" id="go" style="margin:0">START</button>
     <button class="btn ghost sm" id="fsBtn" style="margin:0" title="Play the trainer full screen (F11 style)">FULL SCREEN</button>
   </div>
@@ -376,8 +462,22 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
     <label>TIME <input type="range" id="tim" min="10" max="120" step="5" value="30"><span id="timv">30s</span></label>
   </div>
   <div class="help" id="tInfo" style="margin:-4px 0 10px"></div>
-  <div id="trStage"><canvas id="cv" width="1280" height="720"></canvas><button class="fsx" id="fsExit" title="Exit full screen">EXIT FULL SCREEN</button></div>
+  <div id="trStage"><canvas id="gl"></canvas><canvas id="cv" width="1280" height="720"></canvas><button class="fsx" id="fsExit" title="Exit full screen">EXIT FULL SCREEN</button></div>
   <div class="stat"><span>Time <b id="sT">0</b>s</span><span>Score <b id="sS">–</b></span><span id="sX"></span></div>
+</div></div>
+
+<div class="ov" id="scQ"><div class="box sm" style="text-align:center">
+  <div class="bh" style="justify-content:center"><b>DESKTOP SHORTCUT</b></div>
+  <p id="scMsg" style="font-size:20px;margin:6px 0 18px">Want to add Azware as a desktop shortcut?</p>
+  <div id="scBtns" style="display:flex;gap:10px;justify-content:center;flex-wrap:wrap"><button class="btn" id="scYes" style="margin:0">YES, ADD IT</button><button class="btn ghost" id="scNo" style="margin:0">NO THANKS</button></div>
+  <div class="help" style="margin-top:14px">You can also add it later with "Install Azware.cmd" in the Azware folder.</div>
+</div></div>
+
+<div class="ov" id="set"><div class="box sm">
+  <div class="bh"><b>SETTINGS</b><button class="btn ghost sm" id="setClose" style="margin:0">CLOSE</button></div>
+  <div class="sub">FONT</div><div class="opts" id="setFont"></div>
+  <div class="sub" style="margin-top:18px">COLOUR</div><div class="opts" id="setTheme"></div>
+  <div class="help" style="margin-top:14px">Silver and Rose recolour everything, logo included. Red is the original look.</div>
 </div></div>
 
 <div class="ov" id="psa"><div class="box sm">
@@ -385,6 +485,7 @@ canvas#cv{width:100%;aspect-ratio:16/9;background:#050203;border:1px solid var(-
   <div id="psaBody"></div>
 </div></div>
 
+<script src="build/vendor/three.min.js"></script>
 <script>
 const BRAND = { first: 'AZ', second: 'WARE' };   // change the name here
 function $(id){return document.getElementById(id)}
@@ -392,6 +493,11 @@ $('brandName').innerHTML = `${BRAND.first}<span>${BRAND.second}</span>`;
 document.title = `${BRAND.first[0]+BRAND.first.slice(1).toLowerCase()}${BRAND.second.toLowerCase()} — Aim Training Engine`;
 const mem = {};
 const store = { get(k,d){try{return JSON.parse(localStorage.getItem('az_'+k))??d}catch{return k in mem?mem[k]:d}}, set(k,v){mem[k]=v;try{localStorage.setItem('az_'+k,JSON.stringify(v))}catch{}} };
+// current theme colours and fonts, for things drawn on canvas (the trainer HUD)
+let TH={};
+function readTheme(){const st=getComputedStyle(document.documentElement),v=k=>st.getPropertyValue(k).trim();
+  TH={emberL:parseFloat(v('--emberL'))||0,emberH:parseFloat(v('--emberH'))||0,emberS:v('--emberS')===''?100:parseFloat(v('--emberS')),acc:v('--acc'),acc2:v('--acc2'),mute:v('--mute'),soft:v('--soft'),fh:v('--serif'),fb:v('--body')}}
+readTheme();
 
 /* ---------- scenario library (all names verified against the sources below) ---------- */
 // AIMLABS: Aimlabs' official "Roblox Rivals Aim Basics Routine" (aimlabs.com article by Mr Aimlabs, May 6 2026, updated Jul 9 2026; playlist by lowgravity56).
@@ -625,6 +731,8 @@ function paintStatus(){
   $('psRank').parentNode.title=next?('Next rank '+next[0]+' at '+next[1]+' quests cleared'):'Highest rank reached';
 }
 function render(){
+  const lk=S.platform==='mobile',pb=$('psaOpen');pb.classList.toggle('actlock',lk);pb.setAttribute('aria-disabled',lk);
+  pb.title=lk?'Locked on Mobile: the sensitivity tools are for mouse players. Set your Rivals sensitivity % in the Trainer instead.':'Find your sensitivity (PSA)';
   const dd=dateOfDay(S.day), isToday=S.day===today.getDay(), key=dkey(dd);
   const done=new Set(store.get('done_'+key,[]));
   const cs=($('callsign').value||'').trim();
@@ -650,7 +758,7 @@ function render(){
       return `<div class="q ${s.t} ${done.has(s.id)?'done':''}" data-id="${s.id.replace(/"/g,'&quot;')}" style="animation-delay:${j*60}ms">
       <div class="qtop"><span class="n">${ROMAN[n-1]||n}</span>${s.gs?'<span class="gs">GAME-SPECIFIC</span>':''}<button class="chk" title="Mark done">✓</button></div>
       <div class="qt">${s.name}</div><div class="qd" title="${s.d.replace(/"/g,'&quot;')}">${s.d}</div>
-      <button class="play" data-mode="${MODE_OF[s.t]}" data-siz="${s.mobile?s.mobile.siz:''}" data-spd="${s.mobile?s.mobile.spd:''}">${svgIcon('play')} PRACTICE IN BROWSER</button></div>`}).join('')
+      <button class="play" data-mode="${MODE_OF[s.t]}" data-siz="${s.mobile?s.mobile.siz:''}" data-spd="${s.mobile?s.mobile.spd:''}">${svgIcon('play')} PRACTICE IN TRAINER</button></div>`}).join('')
       :`<div class="empty">No ${TYPE_NAME[sec.t].toLowerCase()} quests today. Raise the ${TYPE_NAME[sec.t]} slider to add some.</div>`}</div></div>`}).join('')+'</div>'
    +`<div class="total">${sourceNote()}</div>`;
   $('routine').querySelectorAll('.list').forEach(l=>{if(scroll[l.dataset.t])l.scrollTop=scroll[l.dataset.t]});
@@ -758,20 +866,82 @@ const SPECIAL=[
   tip:'Wrist aiming is precise but covers little distance, so it suits tracking and small corrections (general guidance). If you run out of room on big movements, use your arm for those. The Sensitivity tool can help you fit your sensitivity to how you move.'},
  {re:/arm[ -]?aim|aim with (?:my |the )?arm|elbow/,t:'F',name:'Arm aiming',
   tip:'Arm aiming covers big distances, so it suits flicks and wide re-targets, but it is less precise for small corrections (general guidance). Pair it with your wrist for the final adjustment. The Sensitivity tool can help you fit your sensitivity to how you move.'},
+ // ---- mindset (t:null = advice only, the routine is not changed) ----
+ {re:/panic|nervous|\bnerves\b|anxi(?:ous|ety)|scared|afraid|\bfear|stress|pressure|adrenaline|heart (?:is )?(?:racing|pounding)|shak(?:y|ing) hands?|hands? (?:shake|shaking)/,t:null,name:'Nerves & panic',
+  tip:'Nerves don\'t take your aim away, they change how you move: a tighter grip and faster, rushed flicks (general guidance). Before a fight, breathe out slowly once and loosen your grip, then aim. In practice, treat the last seconds of each trainer drill like a 1v1 so pressure starts to feel normal.'},
+ {re:/\bchok(?:e|ed|es|ing)\b|clutch|\bfr(?:eeze|eezing|oze|ozen)\b|go(?:es)? blank|mind goes|brain (?:stops|turns off)/,t:null,name:'Freezing or choking',
+  tip:'In a clutch, keep the plan simple: one target, one decision, then the next (general guidance). To practise it, set yourself a score in the trainer and only count it if you reach it on the first try.'},
+ {re:/\btilt|frustrat|angry|\bmad\b|\brag(?:e|ing)\b|annoyed|give up|lose my temper|toxic/,t:null,name:'Tilt',
+  tip:'Tilted players force fights and rush their shots (general guidance). After a bad loss, take a few minutes away before the next match, and pick one mistake to fix instead of all of them.'},
+ {re:/hesitat|second[- ]?guess|\bdoubt|confiden|overthink|don'?t trust my aim|scared to (?:peek|push|fight|shoot)/,t:'F',name:'Hesitation',
+  tip:'Hesitating gives the enemy the first shot. Commit to your first flick and click as soon as the crosshair is on target. The trainer\'s average time-to-hit (ms) shows whether you are hesitating; watch it go down over the week.'},
+ {re:/spam(?:ming)? (?:click|shoot|fir)|click[- ]?spam|trigger[- ]?happy|panic[- ]?(?:shoot|fir|click)|(?:shoot|click|fire)(?:ing)? (?:too )?(?:early|fast|soon)|\brush(?:ing|ed)? (?:my )?(?:shots?|aim|flicks?)/,t:'F',name:'Rushed shots',
+  tip:'You click before the crosshair is on the target. Accuracy comes first, speed second: in flicking drills, get your accuracy % up (the trainer shows it), then speed up.'},
+ {re:/tired|fatigue|exhausted|sleepy|\bpain\b|\bhurts?\b|cramp|sore/,t:null,name:'Fatigue or pain',
+  tip:'Aim gets worse when you are tired, and short daily sessions are usually better than one long one (general guidance). If your hand, wrist or arm hurts, stop and rest. Pain that keeps coming back is a reason to see a doctor, not to train harder.'},
+ {re:/inconsist|some days|one day (?:good|bad)|good one day|random(?:ly)? (?:good|bad)|off days?|bad days?|hit or miss/,t:null,name:'Inconsistency',
+  tip:'Do the same warm-up before every session and keep one sensitivity instead of changing it often (general guidance). The trainer\'s Warm-up set (static flicks, strafe tracking, three-target switch) takes about a minute and a half.'},
+ {re:/warm[- ]?up|\bcold\b|first (?:few )?(?:games|matches|rounds)|start of (?:my |the )?session/,t:null,name:'Cold start',
+  tip:'Warm up before your first match: the trainer\'s Warm-up set runs one flicking, one tracking and one switching drill, 30 seconds each.'},
+ {re:/plateau|not improving|no progress|stopped improving|(?:don'?t|not) get(?:ting)? better|stuck at/,t:null,name:'Plateau',
+  tip:'Play the same daily routine and compare your trainer scores across the week, so you can see progress you would not feel. Change one thing at a time (sensitivity, grip, or routine), not everything at once (general guidance).'},
+ {re:/can'?t hit anything|miss everything|bad aim|aim (?:is )?(?:bad|trash|terrible|awful)|\bi suck\b/,t:null,name:'Aim in general',
+  tip:'Start with today\'s routine as it is. To get advice that fits you, describe what goes wrong: missing flicks, losing moving targets, slow switching, which weapon, at what range.'},
+ // ---- technique ----
+ {re:/\btense|tension|(?:grip|hold)(?:ping|ing)?[a-z ]{0,16}(?:too |so |really )?(?:hard|tight)|death ?grip|stiff/,t:'T',name:'Tense grip',
+  tip:'A tight grip makes tracking jittery and flicks overshoot (general guidance). Hold the mouse loosely, relax your shoulder and forearm, and check your grip between drills.'},
+ {re:/jitter|\bshak(?:y|ing)\b|wobbl|twitch/,t:'T',name:'Shaky aim',
+  tip:'Shaky aim usually comes from a tight grip or a sensitivity that is too high for your hand (general guidance). Loosen your grip, and in tracking drills value smoothness over score. The Sensitivity tool can help if it is your sensitivity.'},
+ {re:/react(?:ion)?|too slow|slow (?:to|at) (?:react|shoot|flick|aim)|\blate\b|(?:shoot|kill)s? me first|lose (?:every |most |my )?(?:1v1|duel)/,t:'F',name:'Reaction speed',
+  tip:'Aimlabs\'s Popshot Roblox Rivals Easy trains quick acquisition and clean initial flicks. Keeping your crosshair at head height where enemies appear also means less distance to flick (general guidance).'},
+ {re:/close range|up close|in my face|point[- ]?blank|close (?:fights?|quarters)|nade[- ]?jump/,t:'T',name:'Close range',
+  tip:'Close enemies cross your screen fast, so close range is tracking with big movements. Aimlabs\'s Bouncesphere Roblox Rivals Easy emulates tracking an opponent\'s nade jump.'},
+ {re:/long range|far away|\bfar (?:enemies|players|targets)|small targets?|tiny targets?|at a distance/,t:'F',name:'Long range',
+  tip:'Far targets are small, so precision matters more than speed. Aimlabs\'s Adjustshot Roblox Rivals trains the initial flick and the small corrections after it, and has an optional sniper ADS overlay.'},
+ {re:/(?:while|when) (?:i\'?m )?moving|moving and (?:aiming|shooting)|(?:aim|shoot)(?:ing)? while (?:moving|strafing|jumping)|my movement|can'?t (?:move|aim) at the same time/,t:'S',name:'Aiming while moving',
+  tip:'Aimlabs\'s Bounce House Switch Roblox Rivals moves you around randomly, so your own movement affects your aim, the same problem you describe.'},
+ {re:/vertical|in the air|airborne|above me|flying|fly(?:ing)? targets?/,t:'T',name:'Vertical and air targets',
+  tip:'Aimlabs\'s Skytrack Roblox Rivals Easy has you track a flying target while you move vertically, and Bouncesphere Roblox Rivals Easy has a target that jumps high and strafes in the air.'},
+ {re:/behind (?:the )?(?:target|enemy|them)|lag(?:ging)? behind|ahead of (?:the )?(?:target|enemy|them)|over[- ]?track|under[- ]?track/,t:'T',name:'Trailing or leading the target',
+  tip:'If you trail behind, you are reacting to where the target was. Watch the target, not your crosshair, and match its speed. Aimlabs\'s Multi Range Tracking Roblox Rivals Easy mixes short and long strafes at different distances.'},
+ {re:/direction change|changes? direction|juk(?:e|es|ing)|\bad[- ]?(?:ad|spam|strafe)|zig[- ]?zag/,t:'T',name:'Direction changes',
+  tip:'Sudden direction changes are the hardest part of tracking. The trainer\'s Dash tracking changes direction at random, and Aimlabs\'s Controlswitch Roblox Rivals has more erratic movement than Smoothswitch.'},
+ {re:/tunnel vision|only (?:see|focus on) one|didn'?t see (?:the )?other|don'?t notice (?:the )?other/,t:'S',name:'Tunnel vision',
+  tip:'After each kill, look for the next enemy straight away. Target switching drills build exactly that habit.'},
+ {re:/head ?(?:height|level)|body ?shots?|can'?t (?:hit|get) (?:the )?heads?|aim (?:too )?low/,t:'T',name:'Hitting the body, not the head',
+  tip:'Keep your crosshair at head height all the time, so most fights start with only a small sideways move (general guidance). Hold that height on purpose in tracking drills.'},
+ // ---- settings and devices ----
+ {re:/\bscope|\bads\b|aim(?:ing)? down (?:the )?sights?|\bzoom/,t:'F',name:'Scoped / aiming sensitivity',
+  tip:'Rivals has separate sliders under Camera Sensitivity (Settings, Video): While Aiming (non-scoped weapons) and While Scoped. If aiming or scoping feels faster or slower than normal, adjust those instead of your main sensitivity.'},
+ {re:/sens(?:itivity)? (?:is |feels )?(?:too )?(?:high|fast|low|slow)|(?:wrong|bad|right|best|perfect) sens|(?:which|what) sens|chang(?:e|ing) (?:my )?sens/,t:null,name:'Sensitivity',
+  tip:'Open the Sensitivity tool: the 360° calculator shows how far your mouse moves for one full turn, and the PSA test narrows down a sensitivity that suits you in 7 rounds.'},
+ {re:/accel|enhance pointer|pointer precision/,t:null,name:'Mouse acceleration',
+  tip:'Windows\' "Enhance pointer precision" option (mouse settings, Pointer Options) is mouse acceleration: the same hand movement turns different amounts depending on how fast you move. Azware\'s trainer asks for raw mouse input. Roblox does not document whether it is affected, so check with the 360° test in the Sensitivity tool.'},
+ {re:/can'?t see|lose sight|visib|hard to see|blend in/,t:null,name:'Seeing the enemy',
+  tip:'This is about seeing, not aiming. Rivals has a Field of View setting (Settings, Video): a higher FOV shows more around you but makes enemies smaller on screen, a lower one does the opposite.'},
+ {re:/\bfps\b|frame ?rate|stutter|\bping\b|\blag\b|\blaggy\b|input (?:lag|delay)|\bdelay/,t:null,name:'FPS or lag',
+  tip:'Low FPS or high ping make aim feel worse no matter how well you aim. Lower Roblox\'s Graphics Quality and close other programs before you judge your aim.'},
+ {re:/mobile|\bphone|touch ?screen|\btouch\b|thumbs?|\bipad|tablet/,t:null,name:'Mobile',
+  tip:'In Rivals, Aim Assist is only available for Touch Controls and Controller, and it has a Pull Strength setting. Pick the Mobile platform in Profile for Azware\'s built-in drills, which also work with touch.'},
+ {re:/controller|gamepad|joystick|xbox|playstation|\bps[45]\b/,t:null,name:'Controller',
+  tip:'In Rivals, Aim Assist is only available for Touch Controls and Controller, and it has a Pull Strength setting. Azware\'s routines are built for mouse aim trainers.'},
 ];
 $('analyze').onclick=()=>{
-  const txt=' '+$('issue').value.toLowerCase()+' ', c=$('coach');
+  const txt=' '+$('issue').value.toLowerCase().replace(/[’‘`]/g,"'")+' ', c=$('coach');
   const score={F:0,T:0,S:0};
   DIAG.forEach(d=>d.w.forEach(w=>{if(txt.includes(w))score[d.t]+=1}));
-  const hits=SPECIAL.filter(x=>x.re.test(txt));hits.forEach(x=>score[x.t]+=2);
+  const hits=SPECIAL.filter(x=>x.re.test(txt));hits.forEach(x=>{if(x.t)score[x.t]+=2});
   const total=score.F+score.T+score.S;
   c.style.display='block';
   if(!txt.trim()){c.innerHTML='Type your issues first — weapon names and what goes wrong both help.';return}
-  if(!total){c.innerHTML='Couldn\'t pin that down. Try naming a weapon (sniper, AR, flamethrower, RPG…) and what goes wrong (miss, lose them, overshoot…).';return}
+  // only mindset / settings terms matched: give the advice, keep the routine as it is
+  if(!total&&hits.length){c.innerHTML=`<b>Diagnosis:</b> ${hits.map(h=>h.name).join(' + ')}.<br>`+hits.map(h=>h.tip).join('<br>')+`<br><span style="color:var(--dim)">Routine unchanged: this isn't one aim skill. Add what goes wrong when you aim (flicks, moving targets, switching) to tune it.</span>`;return}
+  if(!total){c.innerHTML='Couldn\'t pin that down. Try naming a weapon (sniper, AR, flamethrower, RPG…), what goes wrong (miss, lose them, overshoot…) or how you feel (nervous, tilted, tired…).';return}
   const base=18, rem=100-base*3, p={F:Math.round(base+score.F/total*rem),T:Math.round(base+score.T/total*rem),S:0};
   p.S=100-p.F-p.T; S.pri=p; store.set('pri',p); S.loadout=[];store.set('loadout',[]);paintWeapons();$('wcoach').style.display='none';renderPri(); render();
   const top=Object.entries(score).sort((a,b)=>b[1]-a[1]).filter(x=>x[1]>0);
-  c.innerHTML=`<b>Diagnosis:</b> ${[...hits.map(h=>h.name),...top.map(([t])=>TYPE_NAME[t])].join(' + ')}.<br>`+hits.map(h=>h.tip).join('<br>')+(hits.length?'<br>':'')+top.filter(([t])=>!hits.some(h=>h.t===t)).map(([t])=>DIAG.find(d=>d.t===t).tip).join('<br>')+`<br><b>Routine rewritten →</b>`;
+  const tips=[...hits.map(h=>h.tip),...top.filter(([t])=>!hits.some(h=>h.t===t)).map(([t])=>DIAG.find(d=>d.t===t).tip)];
+  c.innerHTML=`<b>Diagnosis:</b> ${[...hits.map(h=>h.name),...top.map(([t])=>TYPE_NAME[t])].join(' + ')}.<br>`+tips.join('<br>')+`<br><b>Routine rewritten →</b>`;
 };
 
 /* ---------- copy playlist ---------- */
@@ -790,17 +960,35 @@ $('copy').onclick=async()=>{
 // Camera.FieldOfView (default 70).
 const cv=$('cv'),cx=cv.getContext('2d');let W=cv.width,H=cv.height;
 // Full screen: the canvas is resized to the screen so the 3D view uses the real aspect ratio and FOV.
+const coarse=()=>matchMedia('(pointer: coarse)').matches;
+const isFs=()=>document.fullscreenElement===$('trStage')||$('trStage').classList.contains('pfs');
 function sizeCanvas(){
-  const fs=document.fullscreenElement===$('trStage'),dpr=Math.min(2,window.devicePixelRatio||1);
-  // drawing stays in a 720-high logical space (so text and targets keep their size); only the pixel density and width change
-  const lw=fs?Math.round(720*innerWidth/innerHeight):1280,k=fs?innerHeight*dpr/720:1,pw=Math.round(lw*k),ph=Math.round(720*k);
-  if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}W=lw;H=720;cx.setTransform(k,0,0,k,0,0);
+  const fs=isFs(),dpr=Math.min(2,window.devicePixelRatio||1);
+  // drawing uses a logical space whose SHORT side is 720 (text and targets keep their size, landscape or portrait)
+  const cw=fs?innerWidth:1280,ch=fs?innerHeight:720,k=fs?Math.min(cw,ch)*dpr/720:1,pw=Math.round(cw*(fs?dpr:1)),ph=Math.round(ch*(fs?dpr:1));
+  if(cv.width!==pw||cv.height!==ph){cv.width=pw;cv.height=ph}W=pw/k;H=ph/k;cx.setTransform(k,0,0,k,0,0);
+  if(initGL())G.r.setSize(pw,ph,false);
   if(TS==='idle')draw();else if(TS==='result'){drawScene();showResults()}else drawScene();
 }
-function toggleFs(){playSelecting();if(document.fullscreenElement)document.exitFullscreen();else $('trStage').requestFullscreen().catch(()=>{})}
+const fsLabel=()=>$('fsBtn').textContent=isFs()?'EXIT FULL SCREEN':'FULL SCREEN';
+function pseudoFs(on){$('trStage').classList.toggle('pfs',on);sizeCanvas();fsLabel()}
+function enterFs(){
+  const st=$('trStage'),landscape=()=>{try{screen.orientation.lock('landscape').catch(()=>{})}catch{}};
+  if(document.fullscreenEnabled&&st.requestFullscreen)st.requestFullscreen().then(landscape).catch(()=>pseudoFs(true));
+  else pseudoFs(true);
+}
+function exitFs(){if(document.fullscreenElement)document.exitFullscreen().catch(()=>{});if($('trStage').classList.contains('pfs'))pseudoFs(false)}
+function toggleFs(){playSelecting();isFs()?exitFs():enterFs()}
 $('fsBtn').onclick=toggleFs;$('fsExit').onclick=e=>{e.stopPropagation();toggleFs()};
-document.addEventListener('fullscreenchange',()=>{sizeCanvas();$('fsBtn').textContent=document.fullscreenElement?'EXIT FULL SCREEN':'FULL SCREEN'});
-addEventListener('resize',()=>{if(document.fullscreenElement)sizeCanvas()});
+$('fsExit').addEventListener('touchend',e=>e.stopPropagation());
+document.addEventListener('fullscreenchange',()=>{sizeCanvas();fsLabel()});
+addEventListener('resize',()=>{if(isFs())sizeCanvas()});
+addEventListener('keydown',e=>{if(e.key==='Escape'&&$('trStage').classList.contains('pfs')&&TS!=='run'&&TS!=='count')pseudoFs(false)});
+// text that always fits: shrinks the font (down to 60%), then cuts the text with an ellipsis
+function fitText(txt,font,px,max){cx.font=font.replace('#',px);let w=cx.measureText(txt).width;
+  if(w>max){px=Math.max(Math.floor(px*.6),Math.floor(px*max/w));cx.font=font.replace('#',px);
+    while(txt.length>1&&cx.measureText(txt).width>max)txt=txt.slice(0,-2)+'…'}
+  return txt}
 let T=null,TS='idle',RES=null,cam={y:0,p:0},TQ=[],TQi=0,TQres=[],lastTouch=null;
 const DR={
   'flick':  {n:'Static flicks',      mode:'flick', siz:5,spd:4,tim:30,spawn:'wall'},
@@ -822,19 +1010,35 @@ const plOpts=()=>Object.entries(PLAYLISTS).map(([k,v])=>`<option value="pl:${k}"
 $('plist').innerHTML=plOpts();$('plist').value=store.get('trPlist','pl:warmup');
 const trSens=()=>parseFloat($('tSens').value)||store.get('psaBase',0)||0.5;
 const trFov=()=>Math.min(120,Math.max(40,parseFloat($('tFov').value)||70));
-function trInfo(){const s=trSens(),d=store.get('psaDpi',0);$('tInfo').textContent=`${(ROBLOX_YAW*s).toFixed(4)}° per mouse count`+(d?` · ${cm360(s,d).toFixed(1)} cm / 360° at ${d} DPI`:'')+' · same turn speed as Roblox at this sensitivity'}
+// Mobile platform: one Rivals-style sensitivity % (0-200) replaces the Roblox mouse sensitivity.
+// Touch turn rate copies Roblox's default touch camera (PlayerModule > CameraModule > CameraInput.lua, checked Oct 2026):
+// ROTATION_SPEED_TOUCH = (1, 0.66) x 1 degree per input delta, and pitching away from the horizon is slowed
+// (MIN_TOUCH_SENSITIVITY_FRACTION 0.25 at 90 degrees). The % multiplies that rate, like Rivals' Camera Sensitivity slider.
+// Not verified: whether Rivals keeps Roblox's default touch camera, and that Roblox's input delta equals one screen point.
+const isMob=()=>S.platform==='mobile';
+const touchScale=()=>{const v=+store.get('rivalsMobileSens',100);return isFinite(v)?Math.max(0,Math.min(200,v)):100};
+function syncTouch(){const m=isMob();$('tTouchL').style.display=m?'flex':'none';$('tSensL').style.display=m?'none':'flex';$('tTouch').value=touchScale();$('tTouchV').textContent=touchScale()+'%'}
+$('tTouch').oninput=()=>{store.set('rivalsMobileSens',+$('tTouch').value);$('tTouchV').textContent=$('tTouch').value+'%';trInfo()};
+function robloxTouchTurn(dx,dy){   // degrees turned for a drag of dx, dy screen points
+  const k=touchScale()/100;let ky=.66;
+  if(dy*cam.p<0){const c=1-Math.pow(2*Math.abs(rad(cam.p))/Math.PI,.75);ky*=c*(1-.25)+.25}
+  return[dx*k,dy*ky*k]}
+function trInfo(){const s=trSens(),d=store.get('psaDpi',0);
+  if(isMob()){$('tInfo').textContent=`Mobile: set RIVALS SENS to your Rivals Camera Sensitivity %. At ${touchScale()}%, dragging 100 points turns ${touchScale()}° sideways (Roblox's default touch camera rate). One finger aims, tap or a second finger shoots. Starting a drill goes full screen.`;return}
+  if(coarse()){$('tInfo').textContent='Touch: one finger drags to aim, tap or use a second finger to shoot. Turn speed follows the sensitivity times TOUCH SENS (0-200%), but touch is not matched to Roblox mobile. Starting a drill goes full screen.';return}
+  $('tInfo').textContent=`${(ROBLOX_YAW*s).toFixed(4)}° per mouse count`+(d?` · ${cm360(s,d).toFixed(1)} cm / 360° at ${d} DPI`:'')+' · same turn speed as Roblox at this sensitivity'}
 function syncCustom(){$('trCustom').style.display=$('plist').value==='custom'?'flex':'none'}
 function openTrainer(mode,siz,spd){
   $('tr').classList.add('on');$('tSens').value=store.get('psaBase','')||'';$('tFov').value=store.get('trFov',70);
   if(mode){$('plist').value='custom';$('mode').value=mode;if(siz)$('siz').value=siz;if(spd)$('spd').value=spd}
-  syncCustom();trInfo();toIdle();
+  syncCustom();syncTouch();trInfo();toIdle();
 }
 $('free').onclick=()=>openTrainer();
-$('trClose').onclick=()=>{sfx('close');stopRun();if(document.fullscreenElement)document.exitFullscreen();$('tr').classList.remove('on')};
+$('trClose').onclick=()=>{sfx('close');stopRun();exitFs();$('tr').classList.remove('on')};
 $('tim').oninput=()=>$('timv').textContent=$('tim').value+'s';
 $('plist').onchange=()=>{playSelecting();store.set('trPlist',$('plist').value);syncCustom();toIdle()};
 $('tSens').oninput=()=>{const v=parseFloat($('tSens').value);if(v>0)store.set('psaBase',v);trInfo()};
-$('tFov').oninput=()=>{store.set('trFov',trFov());draw()};
+$('tFov').oninput=()=>{store.set('trFov',trFov());if(TS==='idle')draw()};
 $('go').onclick=()=>beginQueue();
 
 /* ---- queue of drills ---- */
@@ -847,10 +1051,14 @@ function buildQueue(){
     let i=0;return generate(today.getDay()).flatMap(p=>p.items).map(q=>{const arr=pick[q.t],d=DR[arr[i++%arr.length]];return{...d,...lv,tim:30,n:d.n+' · '+q.name}})}
   return PLAYLISTS[k].list.map(x=>DR[x]);
 }
-function lockMouse(){if(matchMedia('(pointer: coarse)').matches)return;try{const p=cv.requestPointerLock({unadjustedMovement:true});if(p&&p.catch)p.catch(()=>{try{cv.requestPointerLock()}catch{}})}catch{try{cv.requestPointerLock()}catch{}}}
-function beginQueue(){TQ=buildQueue();TQi=0;TQres=[];cam={y:0,p:0};lockMouse();countdown()}
+function lockMouse(){if(coarse())return;
+  // raw mouse input first (no Windows pointer acceleration); plain lock if that isn't supported. Refusals are ignored:
+  // a click on the view during the drill tries again.
+  const plain=()=>{try{const q=cv.requestPointerLock();if(q&&q.catch)q.catch(()=>{})}catch{}};
+  try{const p=cv.requestPointerLock({unadjustedMovement:true});if(p&&p.catch)p.catch(plain)}catch{plain()}}
+function beginQueue(){if(coarse()&&!isFs())enterFs();TQ=buildQueue();TQi=0;TQres=[];cam={y:0,p:0};lockMouse();countdown()}
 function countdown(){
-  TS='count';const d=TQ[TQi],t0=performance.now();sfx('open');
+  TS='count';cam={y:0,p:0};const d=TQ[TQi],t0=performance.now();sfx('open');   // every drill starts facing the front wall
   (function cd(now){if(TS!=='count')return;const left=3-(now-t0)/1000;drawScene();label(`${TQi+1} / ${TQ.length} · ${d.n}`,Math.ceil(Math.max(left,.01)));
     if(left<=0)startDrill(d);else requestAnimationFrame(cd)})(t0);
 }
@@ -861,19 +1069,22 @@ function startDrill(d){
   requestAnimationFrame(loop);
 }
 function stopRun(){TS='idle';T=null;if(document.pointerLockElement===cv)document.exitPointerLock()}
-function toIdle(){TS='idle';T=null;RES=null;draw()}
+function toIdle(){TS='idle';T=null;RES=null;cam={y:0,p:0};draw()}
 document.addEventListener('pointerlockchange',()=>{if(document.pointerLockElement!==cv&&(TS==='run'||TS==='count')){if(T)finishDrill(true);else{TS='idle';draw()}}});
 
 /* ---- targets in angles (degrees) ---- */
 const rad=x=>x*Math.PI/180,deg=x=>x*180/Math.PI;
 const hfov=()=>2*deg(Math.atan(Math.tan(rad(trFov())/2)*W/H));
 function mk(d){
-  const r=.5+d.siz*.3,hf=hfov(),vf=trFov();let y,p,tries=0;
+  const r=.5+d.siz*.3,hf=hfov(),vf=trFov(),others=T?T.t:[];let y,p,tries=0;
+  // keep targets above the floor and not on top of the crosshair or another target
+  const bad=()=>Math.hypot(y-cam.y,p-cam.p)<r*3||others.some(o=>o&&Math.hypot(y-o.y,p-o.p)<(r+o.r)*1.6);
   do{ if(d.spawn==='near'){const a=Math.random()*6.28,dist=4+Math.random()*7;y=cam.y+Math.cos(a)*dist;p=cam.p+Math.sin(a)*dist}
       else if(d.spawn==='wide'){y=(Math.random()*2-1)*70;p=(Math.random()*2-1)*vf*.3}
       else{y=(Math.random()*2-1)*hf*.42;p=(Math.random()*2-1)*vf*.3}
-      tries++;}while(tries<20&&Math.hypot(y-cam.y,p-cam.p)<r*3);
-  if(d.mode==='track'){y=cam.y+(Math.random()*2-1)*10;p=Math.max(-20,Math.min(20,cam.p))}
+      p=Math.max(-20,Math.min(35,p));
+      tries++;}while(tries<30&&bad());
+  if(d.mode==='track'){y=Math.max(-hf*.4,Math.min(hf*.4,cam.y+(Math.random()*2-1)*10));p=Math.max(-20,Math.min(20,cam.p))}
   return{y,p,r,vy:0,vp:0,born:performance.now(),ph:Math.random()*6.28};
 }
 const dir=(y,p)=>[Math.cos(rad(p))*Math.sin(rad(y)),Math.sin(rad(p)),Math.cos(rad(p))*Math.cos(rad(y))];
@@ -885,22 +1096,35 @@ function proj(y,p){
 }
 
 /* ---- input ---- */
-cv.addEventListener('mousemove',e=>{if(document.pointerLockElement!==cv||(TS!=='run'&&TS!=='count'))return;const k=ROBLOX_YAW*trSens();cam.y+=e.movementX*k;cam.p=Math.max(-89,Math.min(89,cam.p-e.movementY*k));if(TS==='count')drawScene()});
+cv.addEventListener('mousemove',e=>{if(document.pointerLockElement!==cv||(TS!=='run'&&TS!=='count'))return;const k=ROBLOX_YAW*trSens();cam.y+=e.movementX*k;cam.p=Math.max(-89,Math.min(89,cam.p-e.movementY*k))});
+cv.addEventListener('contextmenu',e=>e.preventDefault());
 cv.addEventListener('mousedown',e=>{
+  if(e.button!==0)return;   // left click only (shoot / start / continue)
   if(TS==='result'){sfx('close');toIdle();return}
   if(TS==='idle'){beginQueue();return}
   if(TS==='run'&&document.pointerLockElement!==cv){lockMouse();return}
   if(TS==='run')shoot();
 });
-cv.addEventListener('touchstart',e=>{e.preventDefault();const p=e.touches[0];lastTouch={x:p.clientX,y:p.clientY,moved:0};
-  if(TS==='result'){sfx('close');toIdle();lastTouch=null}else if(TS==='idle'){beginQueue();lastTouch=null}},{passive:false});
-cv.addEventListener('touchmove',e=>{e.preventDefault();if(!lastTouch||TS!=='run')return;const p=e.touches[0],k=.22*Math.max(.2,trSens()/.5);
-  cam.y+=(p.clientX-lastTouch.x)*k;cam.p=Math.max(-89,Math.min(89,cam.p-(p.clientY-lastTouch.y)*k));lastTouch.moved+=Math.abs(p.clientX-lastTouch.x)+Math.abs(p.clientY-lastTouch.y);lastTouch.x=p.clientX;lastTouch.y=p.clientY},{passive:false});
-cv.addEventListener('touchend',e=>{if(lastTouch&&lastTouch.moved<8&&TS==='run')shoot();lastTouch=null});
+// touch: the first finger aims (a quick tap without dragging also shoots); any extra finger shoots, like a fire button.
+// Taps to start / continue are handled on touchend, which counts as a user gesture (needed to go full screen).
+const ofId=(list,id)=>[...list].find(t=>t.identifier===id);
+cv.addEventListener('touchstart',e=>{e.preventDefault();
+  for(const p of e.changedTouches){
+    if(!lastTouch)lastTouch={id:p.identifier,x:p.clientX,y:p.clientY,moved:0};
+    else if(TS==='run')shoot();
+  }},{passive:false});
+cv.addEventListener('touchmove',e=>{e.preventDefault();if(!lastTouch)return;const p=ofId(e.changedTouches,lastTouch.id);if(!p)return;
+  const dx=p.clientX-lastTouch.x,dy=p.clientY-lastTouch.y;lastTouch.moved+=Math.abs(dx)+Math.abs(dy);lastTouch.x=p.clientX;lastTouch.y=p.clientY;
+  if(TS!=='run'&&TS!=='count')return;
+  if(isMob()){const[ty,tp]=robloxTouchTurn(dx,dy);cam.y+=ty;cam.p=Math.max(-89,Math.min(89,cam.p-tp));return}
+  const k=.22*Math.max(.2,trSens()/.5);cam.y+=dx*k;cam.p=Math.max(-89,Math.min(89,cam.p-dy*k))},{passive:false});
+const touchUp=e=>{if(!lastTouch||!ofId(e.changedTouches,lastTouch.id))return;const tap=lastTouch.moved<8;lastTouch=null;if(!tap)return;
+  if(TS==='result'){sfx('close');toIdle()}else if(TS==='idle')beginQueue();else if(TS==='run'&&e.type==='touchend')shoot()};
+cv.addEventListener('touchend',touchUp);cv.addEventListener('touchcancel',touchUp);
 function shoot(){
   if(!T||T.mode==='track')return;T.shots++;
   const i=T.t.findIndex(t=>angTo(t)<=t.r);
-  if(i>=0){T.hits++;T.rts.push(performance.now()-T.t[i].born);T.t[i]=mk(T.d);sfx('hit')}else sfx('miss');
+  if(i>=0){T.hits++;T.rts.push(performance.now()-T.t[i].born);T.t[i]=mk(T.d);hitFlash=performance.now();sfx('hit')}else sfx('miss');
 }
 
 /* ---- loop ---- */
@@ -928,41 +1152,111 @@ function finishDrill(aborted){
   sfx('end');drawScene();showResults();
 }
 
+
+/* ---------- WebGL renderer for the trainer (three.js) ---------- */
+let G=null;
+new MutationObserver(()=>document.body.classList.toggle('trn',$('tr').classList.contains('on'))).observe($('tr'),{attributes:true,attributeFilter:['class']});
+function initGL(){
+  if(G!==null)return G;G=false;
+  try{
+    if(!window.THREE)return G;
+    const r=new THREE.WebGLRenderer({canvas:$('gl'),antialias:true,powerPreference:'high-performance'});
+    r.setPixelRatio(1);r.outputEncoding=THREE.sRGBEncoding;
+    const sc=new THREE.Scene();sc.background=new THREE.Color('#1d2026');
+    const cam3=new THREE.PerspectiveCamera(70,16/9,.1,500);cam3.rotation.order='YXZ';
+    sc.add(new THREE.HemisphereLight('#e8edf5','#40363a',.95));
+    const sun=new THREE.DirectionalLight('#ffffff',.55);sun.position.set(-12,30,-6);sc.add(sun);
+    // grid texture for the room (light lines on slate, like KovaaK's / Aimlabs practice rooms)
+    const gridTex=(base,line,major,rx,ry)=>{const c=document.createElement('canvas');c.width=c.height=256;const g=c.getContext('2d');
+      g.fillStyle=base;g.fillRect(0,0,256,256);g.strokeStyle=line;g.lineWidth=2;
+      for(let i=0;i<=256;i+=64){g.beginPath();g.moveTo(i,0);g.lineTo(i,256);g.moveTo(0,i);g.lineTo(256,i);g.stroke()}
+      g.strokeStyle=major;g.lineWidth=5;g.strokeRect(0,0,256,256);
+      const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(rx,ry);t.anisotropy=r.capabilities.getMaxAnisotropy();t.encoding=THREE.sRGBEncoding;return t};
+    const RW=110,RH=44,RD=110,wall='#4a505b',line='#636b78',major='#7b8494';
+    const mat=(base,rx,ry)=>new THREE.MeshLambertMaterial({map:gridTex(base,line,major,rx,ry),side:THREE.BackSide});
+    // box faces: +x, -x, +y (ceiling), -y (floor), +z (front wall), -z (back wall)
+    const box=new THREE.Mesh(new THREE.BoxGeometry(RW,RH,RD),[mat(wall,RD/8,RH/8),mat(wall,RD/8,RH/8),mat('#3a3f48',RW/8,RD/8),mat('#40454f',RW/8,RD/8),mat(wall,RW/8,RH/8),mat(wall,RW/8,RH/8)]);
+    box.position.set(0,RH/2-9,RD/2-28);sc.add(box);
+    // red accent strip along the front wall's base
+    const strip=new THREE.Mesh(new THREE.PlaneGeometry(RW,.5),new THREE.MeshBasicMaterial({color:'#e61718'}));strip.position.set(0,-8.7,RD-28-.05);strip.rotation.y=Math.PI;sc.add(strip);strip.material.color.set(TH.acc||'#e61718');
+    const sphGeo=new THREE.SphereGeometry(1,40,28);
+    const tMat=new THREE.MeshStandardMaterial({color:'#ff1414',emissive:'#9a0000',emissiveIntensity:.7,roughness:.22,metalness:.08});
+    const pool=[0,1,2].map(()=>{const m=new THREE.Mesh(sphGeo,tMat);m.visible=false;sc.add(m);return m});
+    r.setSize(cv.width,cv.height,false);
+    G={r,sc,cam3,pool,strip,fov:0,aspect:0};
+  }catch(e){G=false}
+  return G;
+}
+const TD=22;   // target distance (world units); angular size is what matters
+function renderGL(){
+  const c=G.cam3,f=trFov(),a=W/H;
+  if(G.fov!==f||G.aspect!==a){c.fov=f;c.aspect=a;c.updateProjectionMatrix();G.fov=f;G.aspect=a}
+  // three.js is right-handed (+x is on the LEFT when looking down +z), the aim maths is left-handed (+x on the right),
+  // so x is mirrored here: mouse right turns the view right, and targets show on the side the hit test expects
+  c.rotation.y=Math.PI-rad(cam.y);c.rotation.x=rad(cam.p);
+  const now=performance.now();
+  G.pool.forEach((m,i)=>{const t=T&&T.t[i];if(!t){m.visible=false;return}
+    const d=dir(t.y,t.p),pop=Math.min(1,(now-t.born)/90),k=TD*Math.tan(rad(t.r))*(.6+.4*pop);
+    m.position.set(-d[0]*TD,d[1]*TD,d[2]*TD);m.scale.setScalar(k);m.visible=true});
+  G.r.render(G.sc,c);
+}
+let hitFlash=0,fps=0,fpsN=0,fpsT=performance.now();
 /* ---- drawing ---- */
 function drawScene(){
-  cx.fillStyle='#070203';cx.fillRect(0,0,W,H);
-  cx.strokeStyle='rgba(230,23,24,.16)';cx.lineWidth=1;
+  if(initGL()){
+    renderGL();cx.clearRect(0,0,W,H);
+    fpsN++;const nw=performance.now();if(nw-fpsT>=500){fps=Math.round(fpsN*1000/(nw-fpsT));fpsN=0;fpsT=nw}
+    if(TS==='run'){cx.font='600 13px '+TH.fh;cx.textAlign='right';cx.fillStyle='rgba(255,255,255,.55)';cx.fillText(fps+' FPS',W-24,62)}
+    crosshair();return;
+  }
+  // lit room: lighter sky above the horizon, warmer floor below it (horizon follows where you look)
+  const hz=proj(cam.y,0),hy=hz?Math.max(-H,Math.min(2*H,hz.y)):(cam.p>0?2*H:-H);
+  const sky=cx.createLinearGradient(0,hy-H,0,hy);sky.addColorStop(0,'#1a1316');sky.addColorStop(1,'#3a2328');
+  cx.fillStyle=sky;cx.fillRect(0,0,W,Math.max(0,Math.min(H,hy)));
+  const fl=cx.createLinearGradient(0,hy,0,hy+H);fl.addColorStop(0,'#33191c');fl.addColorStop(1,'#140a0b');
+  cx.fillStyle=fl;cx.fillRect(0,Math.max(0,hy),W,H);
+  cx.strokeStyle='rgba(255,90,90,.28)';cx.lineWidth=1;
   for(let y=-180;y<180;y+=15){cx.beginPath();let pen=false;for(let p=-75;p<=75;p+=7.5){const s=proj(y,p);if(!s){pen=false;continue}pen?cx.lineTo(s.x,s.y):cx.moveTo(s.x,s.y);pen=true}cx.stroke()}
-  for(let p=-60;p<=60;p+=15){cx.beginPath();let pen=false;for(let y=-180;y<=180;y+=5){const s=proj(y,p);if(!s){pen=false;continue}pen?cx.lineTo(s.x,s.y):cx.moveTo(s.x,s.y);pen=true}cx.strokeStyle=p===0?'rgba(230,23,24,.38)':'rgba(230,23,24,.16)';cx.stroke()}
+  for(let p=-60;p<=60;p+=15){cx.beginPath();let pen=false;for(let y=-180;y<=180;y+=5){const s=proj(y,p);if(!s){pen=false;continue}pen?cx.lineTo(s.x,s.y):cx.moveTo(s.x,s.y);pen=true}cx.strokeStyle=p===0?'rgba(255,110,110,.7)':'rgba(255,90,90,.28)';cx.stroke()}
   if(T)T.t.forEach(t=>{const s=proj(t.y,t.p);if(!s)return;const R=Math.max(3,s.F*Math.tan(rad(t.r))/s.z);
     const g=cx.createRadialGradient(s.x-R*.3,s.y-R*.3,R*.1,s.x,s.y,R);g.addColorStop(0,'#ff6a6a');g.addColorStop(1,'#b3080c');
     cx.beginPath();cx.arc(s.x,s.y,R,0,7);cx.fillStyle=g;cx.shadowColor='#e61718';cx.shadowBlur=18;cx.fill();cx.shadowBlur=0});
-  // single crosshair, always at the centre (the system cursor is hidden)
+  crosshair();
+}
+function crosshair(){
   cx.strokeStyle='#fff';cx.lineWidth=2;const c=W/2,m=H/2;cx.beginPath();cx.moveTo(c-14,m);cx.lineTo(c-5,m);cx.moveTo(c+5,m);cx.lineTo(c+14,m);cx.moveTo(c,m-14);cx.lineTo(c,m-5);cx.moveTo(c,m+5);cx.lineTo(c,m+14);cx.stroke();
   cx.fillStyle='#fff';cx.fillRect(c-1,m-1,2,2);
+  if(performance.now()-hitFlash<130){cx.strokeStyle=TH.acc2;cx.lineWidth=2.5;cx.beginPath();cx.moveTo(c-16,m-16);cx.lineTo(c-8,m-8);cx.moveTo(c+16,m-16);cx.lineTo(c+8,m-8);cx.moveTo(c-16,m+16);cx.lineTo(c-8,m+8);cx.moveTo(c+16,m+16);cx.lineTo(c+8,m+8);cx.stroke()}
 }
 function hud(now){
   const left=Math.max(0,(T.end-now)/1000),st=stats();
   $('sT').textContent=left.toFixed(1);$('sS').textContent=st.main;$('sX').textContent=st.sub;
-  cx.font='600 22px Cinzel,serif';cx.textAlign='left';cx.fillStyle='rgba(255,255,255,.75)';cx.fillText(`${TQi+1}/${TQ.length}  ${T.d.n}`,24,40);
-  cx.textAlign='right';cx.fillText(left.toFixed(1)+'s',W-24,40);
+  const tm=left.toFixed(1)+'s';cx.font='600 22px '+TH.fh;const tw=cx.measureText(tm).width;
+  cx.textAlign='left';cx.fillStyle='rgba(255,255,255,.75)';cx.fillText(fitText(`${TQi+1}/${TQ.length}  ${T.d.n}`,'600 #px '+TH.fh,22,W-72-tw),24,40);
+  cx.font='600 22px '+TH.fh;cx.textAlign='right';cx.fillText(tm,W-24,40);
 }
-function label(title,big){cx.textAlign='center';cx.fillStyle='rgba(0,0,0,.45)';cx.fillRect(0,H/2-120,W,240);cx.fillStyle='#fff';cx.font='600 30px Cinzel,serif';cx.fillText(title,W/2,H/2-60);
-  cx.font='700 110px Cinzel,serif';cx.fillStyle='#ff4a4a';cx.fillText(String(big),W/2,H/2+70)}
+function label(title,big){cx.textAlign='center';cx.fillStyle='rgba(0,0,0,.45)';cx.fillRect(0,H/2-120,W,240);cx.fillStyle='#fff';cx.fillText(fitText(title,'600 #px '+TH.fh,30,W-48),W/2,H/2-60);
+  cx.font='700 110px '+TH.fh;cx.fillStyle=TH.acc2;cx.fillText(String(big),W/2,H/2+70)}
 function showResults(){
-  const L=RES.list,h=Math.min(H-80,170+L.length*46);cx.fillStyle='rgba(4,1,2,.86)';cx.fillRect(W/2-430,H/2-h/2,860,h);
-  cx.strokeStyle='#e61718';cx.lineWidth=2;cx.strokeRect(W/2-430,H/2-h/2,860,h);cx.textAlign='center';
-  let y=H/2-h/2+58;cx.fillStyle='#ff4a4a';cx.font='700 34px Cinzel,serif';cx.fillText(RES.aborted?'STOPPED':'RESULTS',W/2,y);y+=26;
-  cx.font='500 24px "Cormorant Garamond",serif';
-  L.slice(-10).forEach(r=>{y+=44;cx.textAlign='left';cx.fillStyle='#e9dede';cx.fillText(r.n.length>46?r.n.slice(0,45)+'…':r.n,W/2-400,y);cx.textAlign='right';cx.fillStyle='#fff';cx.font='700 26px Cinzel,serif';cx.fillText(r.main,W/2+150,y);
-    cx.font='500 19px "Cormorant Garamond",serif';cx.fillStyle='#bf9a9a';cx.fillText(r.sub.length>34?r.sub.slice(0,33)+'…':r.sub,W/2+400,y);cx.font='500 24px "Cormorant Garamond",serif'});
-  if(!L.length){y+=50;cx.textAlign='center';cx.fillStyle='#bf9a9a';cx.fillText('No drill was finished.',W/2,y)}
-  cx.textAlign='center';cx.fillStyle='#bf9a9a';cx.font='600 16px Cinzel,serif';cx.fillText('CLICK TO CONTINUE',W/2,H/2+h/2-24);
+  // wide screens: one row per drill; narrow (phone portrait): name on one line, score under it
+  const L=RES.list,bw=Math.min(860,W-32),nar=bw<700,rh=Math.min(nar?66:44,(H-60-150)/Math.max(1,L.length)),h=150+Math.max(1,L.length)*rh,x0=W/2-bw/2,y0=H/2-h/2;
+  cx.fillStyle='rgba(4,1,2,.86)';cx.fillRect(x0,y0,bw,h);cx.strokeStyle=TH.acc;cx.lineWidth=2;cx.strokeRect(x0,y0,bw,h);cx.textAlign='center';
+  let y=y0+58;cx.fillStyle=TH.acc2;cx.font='700 34px '+TH.fh;cx.fillText(RES.aborted?'STOPPED':'RESULTS',W/2,y);y+=26;
+  L.forEach(r=>{
+    if(nar){y+=rh*.52;cx.textAlign='left';cx.fillStyle=TH.soft;cx.fillText(fitText(r.n,'500 #px '+TH.fb,24,bw-48),x0+24,y);
+      y+=rh*.48;cx.fillStyle='#fff';cx.font='700 26px '+TH.fh;cx.fillText(r.main,x0+24,y);const mw=cx.measureText(r.main).width;
+      cx.textAlign='right';cx.fillStyle=TH.mute;cx.fillText(fitText(r.sub,'500 #px '+TH.fb,19,bw-72-mw),x0+bw-24,y);return}
+    y+=rh;cx.textAlign='left';cx.fillStyle=TH.soft;cx.fillText(fitText(r.n,'500 #px '+TH.fb,24,bw*.6-40),x0+30,y);
+    cx.textAlign='right';cx.fillStyle='#fff';cx.font='700 26px '+TH.fh;cx.fillText(r.main,x0+bw*.675,y);
+    cx.fillStyle=TH.mute;cx.fillText(fitText(r.sub,'500 #px '+TH.fb,19,bw*.325-40),x0+bw-30,y)});
+  if(!L.length){y+=50;cx.textAlign='center';cx.fillStyle=TH.mute;cx.font='500 24px '+TH.fb;cx.fillText('No drill was finished.',W/2,y)}
+  cx.textAlign='center';cx.fillStyle=TH.mute;cx.font='600 16px '+TH.fh;cx.fillText(coarse()?'TAP TO CONTINUE':'CLICK TO CONTINUE',W/2,y0+h-24);
 }
 function draw(){
-  drawScene();cx.textAlign='center';cx.fillStyle='rgba(255,255,255,.85)';cx.font='600 30px Cinzel,serif';
-  cx.fillText(matchMedia('(pointer: coarse)').matches?'Tap to start · drag to aim · tap to shoot':'Click to start · your mouse is locked to the view',W/2,H/2-60);
-  cx.font='500 22px "Cormorant Garamond",serif';cx.fillStyle='#bf9a9a';cx.fillText('Esc stops the drill. The turn speed matches your Roblox sensitivity.',W/2,H/2+70);
+  drawScene();cx.fillStyle='rgba(0,0,0,.45)';cx.fillRect(0,H/2-110,W,220);cx.textAlign='center';cx.fillStyle='rgba(255,255,255,.85)';
+  cx.fillText(fitText(coarse()?'Tap to start · drag to aim · tap to shoot':'Click to start · your mouse is locked to the view','600 #px '+TH.fh,30,W-48),W/2,H/2-60);
+  cx.fillStyle=TH.mute;
+  cx.fillText(fitText(coarse()?(H>W?'Turn your phone sideways for a wider view.':'A second finger also shoots, like a fire button.'):'Esc stops the drill. The turn speed matches your Roblox sensitivity.','500 #px '+TH.fb,22,W-48),W/2,H/2+70);
 }
 function reset(){toIdle()}
 
@@ -1044,7 +1338,7 @@ function psaDone(){sfx('result');
   <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap"><button class="btn ghost" id="pRestart">RUN AGAIN</button><button class="btn ghost" id="pCalc">OPEN 360° CALCULATOR</button></div>`;
   $('pRestart').onclick=psaIntro;$('pCalc').onclick=()=>{store.set('sensTab','calc');calcView()};
 }
-$('psaOpen').onclick=()=>{$('psa').classList.add('on');psaOpen()};
+$('psaOpen').onclick=()=>{if($('psaOpen').classList.contains('actlock'))return;$('psa').classList.add('on');psaOpen()};
 $('psaClose').onclick=()=>{sfx('close');$('psa').classList.remove('on')};
 document.addEventListener('keydown',e=>{if(e.key==='Escape'){hideRankUp();$('psa').classList.remove('on');$('tr').classList.remove('on');stopRun()}});
 
@@ -1125,6 +1419,44 @@ function playIntro(){
   setTimeout(end,reduce?900:3000);
 })();
 
+
+/* ---------- settings: font + UI colour ---------- */
+const FONTS=[['modern','Modern','Segoe UI, clean and simple',"'Segoe UI',system-ui,sans-serif"],['monarch','Monarch','Cinzel + Cormorant, the original look',"Cinzel,Georgia,serif"]];
+const THEMES=[['red','Red','The original red',['#ff4a4a','#e61718','#8f0a0a']],['silver','Silver','White silver',['#ffffff','#eef1f5','#a6acb4']],['rose','Rose','Rose pink and white',['#ffffff','#ffc2d4','#ff5d8f']]];
+const curFont=()=>store.get('font','modern')==='monarch'?'monarch':'modern';
+function applyLook(){
+  const r=document.documentElement;r.dataset.theme=store.get('theme','red');r.dataset.font=curFont();readTheme();
+  if(G&&G.strip)G.strip.material.color.set(TH.acc);
+  if($('tr').classList.contains('on')){if(TS==='idle')draw();else if(TS==='result'){drawScene();showResults()}}
+  paintSettings();
+}
+function paintSettings(){
+  const f=curFont(),t=store.get('theme','red');
+  $('setFont').innerHTML=FONTS.map(([k,n,d,fam])=>`<button class="opt ${k===f?'on':''}" data-k="${k}"><b style="font-family:${fam}">${n}</b><small>${d}${k==='modern'?' · default':''}</small></button>`).join('');
+  $('setTheme').innerHTML=THEMES.map(([k,n,d,c])=>`<button class="opt ${k===t?'on':''}" data-k="${k}"><span class="sw">${c.map(x=>`<i style="background:${x}"></i>`).join('')}</span><b>${n}</b><small>${d}${k==='red'?' · default':''}</small></button>`).join('');
+  $('setFont').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{playSelecting();store.set('font',b.dataset.k);applyLook()});
+  $('setTheme').querySelectorAll('.opt').forEach(b=>b.onclick=()=>{playSelecting();store.set('theme',b.dataset.k);applyLook()});
+}
+$('setOpen').onclick=()=>{playSelecting();sfx('open');paintSettings();$('set').classList.add('on')};
+$('setClose').onclick=()=>{sfx('close');$('set').classList.remove('on')};
+$('set').addEventListener('click',e=>{if(e.target===$('set')){sfx('close');$('set').classList.remove('on')}});
+document.fonts&&document.fonts.ready.then(()=>{readTheme();if($('tr').classList.contains('on')&&TS==='idle')draw()});
+
+/* ---------- Windows app, first launch: offer a desktop shortcut ---------- */
+// Only inside Azware.exe (WebView2 gives the page window.chrome.webview). The exe decides whether to ask and creates the shortcut.
+function initShortcutAsk(wv){
+  if(!wv)return;
+  const show=()=>{$('scQ').classList.add('on');sfx('open')};
+  wv.addEventListener('message',e=>{const m=e.data;
+    if(m==='shortcut:ask'){const wait=()=>window._introDone?setTimeout(show,600):setTimeout(wait,200);wait()}
+    else if(m==='shortcut:done'||m==='shortcut:fail'){
+      $('scMsg').textContent=m==='shortcut:done'?'Done. Azware is on your Desktop.':'Could not create the shortcut. Run "Install Azware.cmd" in the Azware folder instead.';
+      $('scBtns').style.display='none';setTimeout(()=>$('scQ').classList.remove('on'),m==='shortcut:done'?1600:4000)}});
+  $('scYes').onclick=()=>{playSelect();$('scYes').disabled=$('scNo').disabled=true;wv.postMessage('shortcut:yes')};
+  $('scNo').onclick=()=>{sfx('close');wv.postMessage('shortcut:no');$('scQ').classList.remove('on')};
+}
+initShortcutAsk(window.chrome&&window.chrome.webview);
+
 /* ---------- background embers ---------- */
 (function embers(){
   const c=$('embers');if(!c||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
@@ -1134,19 +1466,20 @@ function playIntro(){
   for(let i=0;i<70;i++)P.push(spawn(Math.random()*H));
   let last=performance.now();
   (function tick(now){
-    const dt=Math.min(3,(now-last)/16.7);last=now;
-    if(!document.hidden){x.clearRect(0,0,W,H);x.globalCompositeOperation='lighter';
-      for(const p of P){p.y-=p.vy*dt;p.sw+=p.ss*dt;p.x+=Math.sin(p.sw)*.35*DPR*dt;
-        const life=Math.min(1,p.y/H*1.4);if(p.y<-20){Object.assign(p,spawn())}
-        const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);g.addColorStop(0,`hsla(${p.h},100%,60%,${p.a*life})`);g.addColorStop(1,'hsla(0,100%,50%,0)');
-        x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,p.r*6,0,7);x.fill()}}
     requestAnimationFrame(tick);
+    const dt=Math.min(3,(now-last)/16.7);last=now;
+    // a minimised window can report 0 height: skip the frame (dividing by it would throw and stop the embers for good)
+    if(W>0&&H>0&&!document.hidden&&!document.body.classList.contains('trn')){x.clearRect(0,0,W,H);x.globalCompositeOperation='lighter';
+      for(const p of P){p.y-=p.vy*dt;p.sw+=p.ss*dt;p.x+=Math.sin(p.sw)*.35*DPR*dt;
+        if(p.y<-20||p.y>H*1.3){Object.assign(p,spawn())}const life=Math.max(0,Math.min(1,p.y/H*1.4));
+        const g=x.createRadialGradient(p.x,p.y,0,p.x,p.y,p.r*6);const hue=TH.emberH?TH.emberH+p.h*.3:p.h,lt=TH.emberL||(TH.emberS?60:86);g.addColorStop(0,`hsla(${hue},${TH.emberS}%,${lt}%,${p.a*life})`);g.addColorStop(1,`hsla(${hue},${TH.emberS}%,${lt}%,0)`);
+        x.fillStyle=g;x.beginPath();x.arc(p.x,p.y,p.r*6,0,7);x.fill()}}
   })(last);
 })();
 
 
 /* ---------- top-right buttons ---------- */
-$('psaOpen').addEventListener('click',()=>playSelecting());
+$('psaOpen').addEventListener('click',()=>{if(!$('psaOpen').classList.contains('actlock'))playSelecting()});
 $('free').addEventListener('click',()=>playSelecting());
 $('copy').addEventListener('click',()=>playSelect());
 $('snd').onclick=()=>{const wasOn=store.get('sound',true);if(wasOn)playSelecting();store.set('sound',!wasOn);paintSound();if(!wasOn)playSelecting()};

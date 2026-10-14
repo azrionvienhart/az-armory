@@ -6,7 +6,10 @@
    Vars (wrangler.toml): DISCORD_CLIENT_ID, GUILD_ID, SITE_URL */
 
 const PRODUCTS = {
-  azware: { page: 'azware.html', file: 'https://github.com/azrionvienhart/az-armory/releases/latest/download/Azware.zip' }
+  // one entry per downloadable version (the site sends p=<product>-<platform>)
+  // sset = a file in worker/files/ (private: only handed out after the password + Discord checks)
+  'azware-pc': { page: 'azware.html', asset: '/Azware-v1.0-Windows.zip' }
+  // 'azware-mobile': { page: 'azware.html', file: '...' }
 };
 
 const enc = new TextEncoder();
@@ -29,14 +32,35 @@ async function verify(env, tok) {
 }
 const back = (env, page, q) => Response.redirect(`${env.SITE_URL.replace(/\/$/, '')}/${page}?${q}#get`, 302);
 
+// Download password: stored only as the DOWNLOAD_PASSWORD secret, never in the public site code.
+// Case-sensitive, compared in constant time. Fails closed if the secret isn't set.
+async function passOk(env, k) {
+  if (!env.DOWNLOAD_PASSWORD || !k) return false;
+  const norm = s => String(s).trim();
+  const [a, b] = await Promise.all([norm(k), norm(env.DOWNLOAD_PASSWORD)].map(s => crypto.subtle.digest('SHA-256', enc.encode(s))));
+  const x = new Uint8Array(a), y = new Uint8Array(b); let d = 0;
+  for (let i = 0; i < x.length; i++) d |= x[i] ^ y[i];
+  return d === 0;
+}
+
 export default {
   async fetch(req, env) {
     const url = new URL(req.url);
     const redirectUri = `${url.origin}/callback`;
 
+    // instant check for the site's password box (answers only ok: true/false)
+    if (url.pathname === '/check') {
+      const ok = await passOk(env, url.searchParams.get('k'));
+      if (!ok) await new Promise(r => setTimeout(r, 600)); // slows guessing
+      return new Response(JSON.stringify({ ok }), { headers: {
+        'Content-Type': 'application/json', 'Cache-Control': 'no-store',
+        'Access-Control-Allow-Origin': new URL(env.SITE_URL).origin } });
+    }
+
     if (url.pathname === '/auth') {
       const p = url.searchParams.get('p');
       if (!PRODUCTS[p]) return new Response('Unknown product', { status: 400 });
+      if (!(await passOk(env, url.searchParams.get('k')))) return back(env, PRODUCTS[p].page, 'gate=badpass');
       const state = await sign(env, { p, n: crypto.randomUUID(), exp: Date.now() + 10 * 60e3 });
       const q = new URLSearchParams({ client_id: env.DISCORD_CLIENT_ID, redirect_uri: redirectUri, response_type: 'code', scope: 'identify guilds', state, prompt: 'none' });
       return Response.redirect('https://discord.com/oauth2/authorize?' + q, 302);
@@ -69,7 +93,14 @@ export default {
     if (url.pathname === '/download') {
       const t = await verify(env, url.searchParams.get('t'));
       if (!t || !PRODUCTS[t.p]) return new Response('Download link expired. Unlock again on the site.', { status: 403 });
-      return Response.redirect(PRODUCTS[t.p].file, 302);
+      const prod = PRODUCTS[t.p];
+      if (prod.file) return Response.redirect(prod.file, 302);
+      const r = await env.ASSETS.fetch(new Request(new URL(prod.asset, url.origin)));
+      if (!r.ok) return new Response('File not found.', { status: 404 });
+      const h = new Headers(r.headers);
+      h.set('Content-Disposition', `attachment; filename="${prod.asset.split('/').pop()}"`);
+      h.set('Cache-Control', 'no-store');
+      return new Response(r.body, { status: 200, headers: h });
     }
 
     return new Response('Az.Armory gate', { status: 200 });

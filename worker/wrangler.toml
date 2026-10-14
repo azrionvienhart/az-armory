@@ -6,3 +6,9 @@ compatibility_date = "2025-09-01"
 DISCORD_CLIENT_ID = "1558392824452481105"
 GUILD_ID = "1138073844779851816"   # Azrion's VOID
 SITE_URL = "https://azrionvienhart.github.io/az-armory"
+
+# Private downloads: never served directly; the worker hands them out only after the checks
+[assets]
+directory = "./files"
+binding = "ASSETS"
+run_worker_first = true

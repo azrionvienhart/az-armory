@@ -15,7 +15,7 @@
 <link rel="icon" href="assets/img/azware-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=JetBrains+Mono:wght@400;600&family=Manrope:wght@400;500;600;700&family=Unbounded:wght@400;600;700;800;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="assets/css/site.css?v=202610102058">
+<link rel="stylesheet" href="assets/css/site.css?v=202610141339">
 </head>
 <body>
 <canvas id="bg" aria-hidden="true"></canvas><div class="grid-overlay"></div><div class="vignette"></div><div class="grain"></div>
@@ -48,7 +48,7 @@
         </div>
         <div class="chips" data-hero-fade>
           <span class="chip"><b>12</b> daily quests</span>
-          <span class="chip"><b>3</b> platforms</span>
+          <span class="chip"><b>PC</b> + Mobile</span>
           <span class="chip"><b>7</b>-round PSA</span>
           <span class="chip">No account</span>
         </div>
@@ -68,17 +68,10 @@
     <div class="wrap">
       <div class="sec-head">
         <div><span class="idx">[ I ] — The video</span><h2 class="h-lg" style="margin-top:14px" data-split="up">See the codex work.</h2></div>
-        <p class="lead reveal">The full walkthrough, plus how to actually get good aim in Rivals.</p>
+        <p class="lead reveal">One video for each version. Pick yours.</p>
       </div>
-      <div class="video" data-video="azware">
-        <div class="rec mono"><i></i>REC</div>
-        <div class="soon-v">
-          <div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
-          <h3>Video dropping soon.</h3>
-          <p>"How to Have Good Aim in Rivals" is in the edit. It plays right here once it's live.</p>
-          <a data-link="subscribe" class="btn btn-ghost btn-sm">Subscribe to catch it</a>
-        </div>
-      </div>
+      <div class="ptabs" data-ptabs="azware" role="tablist" aria-label="Choose a version"></div>
+      <div class="video" data-video="azware" data-plat="pc"></div>
       <div class="vid-under">
         <span class="mono" style="color:var(--mute)">From the channel · @7Azrion</span>
         <a data-link="subscribe" class="btn btn-red btn-sm"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.1-2.1C19.5 3.6 12 3.6 12 3.6s-7.5 0-9.4.5A3 3 0 0 0 .5 6.2 31 31 0 0 0 0 12a31 31 0 0 0 .5 5.8 3 3 0 0 0 2.1 2.1c1.9.5 9.4.5 9.4.5s7.5 0 9.4-.5a3 3 0 0 0 2.1-2.1A31 31 0 0 0 24 12a31 31 0 0 0-.5-5.8zM9.6 15.6V8.4l6.3 3.6-6.3 3.6z"/></svg>Subscribe</a>
@@ -193,15 +186,26 @@
     </div>
   </section>
 
-  <!-- INSTALL -->
+  <!-- VERSIONS -->
+  <section class="sec" id="versions" style="padding-top:0">
+    <div class="wrap">
+      <div class="sec-head">
+        <div><span class="idx">[ V ] — Versions</span><h2 class="h-lg" style="margin-top:14px" data-split="up">Two ways to train.</h2></div>
+        <p class="lead reveal">Same codex, built for where you play. Pick your version, then unlock it below.</p>
+      </div>
+      <div class="vers" data-vers="azware"></div>
+    </div>
+  </section>
+
+  <!-- INSTALL (PC) -->
   <section class="sec" style="padding-top:0">
     <div class="wrap">
-      <div class="sec-head"><div><span class="idx">[ V ] — Setup</span><h2 class="h-lg" style="margin-top:14px" data-split="up">Ready in a minute.</h2></div></div>
+      <div class="sec-head"><div><span class="idx">[ VI ] — PC setup</span><h2 class="h-lg" style="margin-top:14px" data-split="up">Ready in a minute.</h2></div></div>
       <div class="install">
-        <div class="inst"><h4>Unlock</h4><p>Complete the three steps below and the zip downloads.</p></div>
-        <div class="inst"><h4>Unzip</h4><p>Extract it somewhere permanent, like <code>Documents\Azware</code>.</p></div>
-        <div class="inst"><h4>Install</h4><p>Run <code>Install Azware.cmd</code> for Desktop and Start Menu shortcuts, or just open <code>Azware.exe</code>.</p></div>
-        <div class="inst"><h4>Train</h4><p>Open Azware, set your profile and clear today's 12 quests.</p></div>
+        <div class="inst"><h4>Unlock</h4><p>Pick <b>PC</b> below, complete the steps, enter the password from the video, and the zip downloads.</p></div>
+        <div class="inst"><h4>Unzip</h4><p>Extract it somewhere permanent, like <code>Documents\Azware</code>. Don't run it from inside the zip.</p></div>
+        <div class="inst"><h4>Open</h4><p>Double-click <code>Azware.exe</code>. On first launch it offers to add a desktop shortcut.</p></div>
+        <div class="inst"><h4>Train</h4><p>Set your profile, clear today's 12 quests. The gear icon switches font and colour theme.</p></div>
       </div>
     </div>
   </section>
@@ -212,12 +216,12 @@
       <div class="gate" data-product="azware">
         <div class="gate-grid">
           <div>
-            <span class="idx">[ VI ] — Unlock</span>
+            <span class="idx">[ VII ] — Unlock</span>
             <h2 class="h-lg" style="margin:14px 0 18px" data-split="up">Get Azware.</h2>
-            <p class="lead" style="margin-bottom:34px">It's free. Just join the community: hop in the Discord, sub on YouTube and follow on Instagram.</p>
+            <p class="lead" style="margin-bottom:34px">It's free. Join the community, then enter the password from the Azware video.</p>
             <div class="ring">
               <svg viewBox="0 0 100 100"><circle class="bgc" cx="50" cy="50" r="46" fill="none" stroke-width="2"/><circle class="fg" cx="50" cy="50" r="46" fill="none" stroke-width="3"/></svg>
-              <div class="mid"><b>0/3</b><span>Steps complete</span></div>
+              <div class="mid"><b>0/4</b><span>Steps complete</span></div>
             </div>
           </div>
           <div>
@@ -237,10 +241,17 @@
                 <div><h5>Follow on Instagram</h5><p>@azrionvienhart: previews and drops.</p></div>
                 <div><button class="btn btn-ghost btn-sm">Follow</button><div class="timer" style="display:none"></div></div>
               </div>
+              <div class="gstep pw">
+                <div class="gi"><svg viewBox="0 0 24 24"><path d="M17 10V7A5 5 0 0 0 7 7v3H5v12h14V10h-2zM9 7a3 3 0 0 1 6 0v3H9V7zm4 10.7V19h-2v-1.3a2 2 0 1 1 2 0z"/></svg></div>
+                <div><h5>Enter the password</h5><p>It's in the Azware video. Case-sensitive.</p>
+                  <form class="pwform" autocomplete="off"><input type="text" class="pwin" placeholder="Password" spellcheck="false" autocapitalize="characters" aria-label="Download password"><span class="pwmsg" aria-live="polite"></span></form></div>
+                <div><button class="btn btn-ghost btn-sm pwbtn" type="button">Unlock</button></div>
+              </div>
             </div>
             <div class="gate-final">
+              <div class="gplat" data-gplat role="radiogroup" aria-label="Version to download"></div>
               <button class="btn btn-red" disabled><span class="lbl">Complete 3 more steps</span> <span class="ar">↓</span></button>
-              <p class="gate-msg">Windows 10/11 · zip · free</p>
+              <p class="gate-msg"></p>
             </div>
           </div>
         </div>
@@ -251,12 +262,14 @@
   <!-- FAQ -->
   <section class="sec" id="faq" style="padding-top:0">
     <div class="wrap">
-      <div class="sec-head"><div><span class="idx">[ VII ] — Questions</span><h2 class="h-lg" style="margin-top:14px" data-split="up">FAQ.</h2></div></div>
+      <div class="sec-head"><div><span class="idx">[ VIII ] — Questions</span><h2 class="h-lg" style="margin-top:14px" data-split="up">FAQ.</h2></div></div>
       <div class="faq">
         <div class="qa"><button>Is Azware a cheat? <span class="pm"></span></button><div class="ans"><p>No. It never touches Roblox. It's a training planner: it tells you which scenarios to play in Aimlabs, KovaaK's or its own browser trainer.</p></div></div>
         <div class="qa"><button>Windows says "Windows protected your PC". Is it safe? <span class="pm"></span></button><div class="ans"><p>That SmartScreen message shows for any new app from a small creator that isn't code-signed. Click <b>More info → Run anyway</b>. Azware.exe is a small window that shows the Azware page (the same one you see in the <a href="app/azware/index.html" target="_blank" rel="noopener" class="red">demo</a>), using Microsoft's WebView2, which comes with Windows 10 and 11.</p></div></div>
         <div class="qa"><button>Do I need Aimlabs or KovaaK's? <span class="pm"></span></button><div class="ans"><p>No. Pick Mobile and Azware uses its built-in browser drills: flicking, switching and tracking at three target sizes.</p></div></div>
-        <div class="qa"><button>Does it work on phone or Mac? <span class="pm"></span></button><div class="ans"><p>The full app is Windows-only. On any other device you can open the <a href="app/azware/index.html" target="_blank" rel="noopener" class="red">browser demo</a> to see your daily quests and use the built-in trainer.</p></div></div>
+        <div class="qa"><button>Is there a phone version? <span class="pm"></span></button><div class="ans"><p>Yes. <b>Azware Mobile</b> is on the way for Android and iPhone, and the Discord gets pinged the day it drops. Until then you can open the <a href="app/azware/index.html" target="_blank" rel="noopener" class="red">browser demo</a> on your phone to see your daily quests.</p></div></div>
+        <div class="qa"><button>What do I need for the PC version? <span class="pm"></span></button><div class="ans"><p>Windows 10 or 11 (64-bit) and Microsoft WebView2, which is built into Windows 11. On Windows 10, if it's missing, Azware tells you and opens the free download page. It's a 1.1 MB download. Mac isn't supported yet.</p></div></div>
+        <div class="qa"><button>How do I uninstall it? <span class="pm"></span></button><div class="ans"><p>Run <code>Uninstall Azware.cmd</code> in the Azware folder. It removes the shortcuts and asks whether to delete your saved progress. Then delete the folder.</p></div></div>
         <div class="qa"><button>Does it save my progress? <span class="pm"></span></button><div class="ans"><p>Yes, on your own device only, in your browser's storage. Clearing site data or switching devices resets it.</p></div></div>
         <div class="qa"><button>Why is my routine different from my friend's? <span class="pm"></span></button><div class="ans"><p>Different platform, level, weapons or sliders. The same inputs on the same date always give the same routine, and it rotates daily.</p></div></div>
       </div>
@@ -282,9 +295,9 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js"></script>
-<script src="assets/js/config.js?v=202610102058"></script>
-<script src="assets/js/bg.js?v=202610102058"></script>
-<script src="assets/js/sound.js?v=202610102058"></script>
-<script src="assets/js/site.js?v=202610102058"></script>
+<script src="assets/js/config.js?v=202610141339"></script>
+<script src="assets/js/bg.js?v=202610141339"></script>
+<script src="assets/js/sound.js?v=202610141339"></script>
+<script src="assets/js/site.js?v=202610141339"></script>
 </body>
 </html>

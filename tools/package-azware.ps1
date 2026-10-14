@@ -1,8 +1,8 @@
 # Packages the current Azware build for Az.Armory. Read-only on the Azware project.
-#  1. release\Azware.zip  <- K:\Claude Code\Azware\dist\Azware   (upload this to the GitHub Release)
+#  1. release\Azware.zip  <- K:\Softwares\Az.Armory\Azware\dist\Azware   (upload this to the GitHub Release)
 #  2. app\azware\         <- dist\Azware\web + demo-lock.js       (the locked "Try the demo" on the site)
 $ErrorActionPreference = 'Stop'
-$dist = 'K:\Claude Code\Azware\dist\Azware'
+$dist = 'K:\Softwares\Az.Armory\Azware\dist\Azware'
 $site = Split-Path $PSScriptRoot -Parent
 if (-not (Test-Path "$dist\Azware.exe")) { throw "No build found at $dist. Run build-app.ps1 in the Azware project first." }
 

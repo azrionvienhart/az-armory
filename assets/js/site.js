@@ -192,18 +192,11 @@
         .then(r => r.ok ? r.json() : null).then(j => { if (j && j.approximate_member_count && live()) set(j.approximate_member_count); }).catch(() => {});
     }
 
-    /* video facade (click-to-play: real views) */
-    $$('[data-video]').forEach(box => {
-      const p = AZ.products[box.dataset.video] || {};
-      const id = (p.videoId || '').trim();
-      if (!id) return; // keep the "video dropping soon" state
-      box.innerHTML = `<div class="facade" role="button" tabindex="0" aria-label="Play video" style="background-image:url(https://i.ytimg.com/vi/${id}/maxresdefault.jpg)">
-        <div class="play"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></div>
-        <div class="vlabel"><span class="tag"><span class="dot"></span>Watch · ${p.name}</span><span class="mono" style="color:#fff">Click to play</span></div></div>`;
-      const play = () => { box.innerHTML = `<iframe src="https://www.youtube.com/embed/${id}?autoplay=1&rel=0&modestbranding=1" title="${p.name} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`; };
-      const f = $('.facade', box); f.addEventListener('click', play); f.addEventListener('keydown', e => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), play()));
-    });
-
+    /* versions (PC / Mobile): video tabs, version cards and the gate picker share one choice */
+    platHooks = [];
+    $$('[data-video]').forEach(box => { const draw = () => renderVideo(box); draw(); platHooks.push(draw); });
+    $$('[data-ptabs]').forEach(el => { const draw = () => renderTabs(el); draw(); platHooks.push(draw); });
+    $$('[data-vers]').forEach(el => { const draw = () => renderVers(el); draw(); platHooks.push(draw); });
     /* FAQ */
     $$('.qa').forEach(q => {
       const b = $('button', q), a = $('.ans', q);
@@ -495,32 +488,118 @@
   }
 
   /* =========================================================
+     Product versions (e.g. Azware PC / Mobile) — data in config.js `platforms`
+     ========================================================= */
+  let platHooks = [];
+  const ICON = {
+    pc: '<svg viewBox="0 0 24 24"><rect x="2.5" y="3.5" width="19" height="13" rx="1.5"/><path d="M8 20.5h8M12 16.5v4"/></svg>',
+    mobile: '<svg viewBox="0 0 24 24"><rect x="6.5" y="2.5" width="11" height="19" rx="2"/><path d="M10.5 18h3"/></svg>'
+  };
+  const platsOf = key => (AZ.products[key] || {}).platforms || null;
+  function getPlat(key) {
+    const P = platsOf(key); if (!P) return null;
+    let v = null; try { v = sessionStorage.getItem('az.plat.' + key); } catch {}
+    return P[v] ? v : Object.keys(P)[0];
+  }
+  function setPlat(key, v) {
+    if (getPlat(key) === v) return;
+    try { sessionStorage.setItem('az.plat.' + key, v); } catch {}
+    sfx('toggle'); platHooks.forEach(fn => fn());
+  }
+  function renderVideo(box) {
+    const key = box.dataset.video, p = AZ.products[key] || {}, P = platsOf(key), plat = P ? getPlat(key) : null;
+    const item = P ? P[plat] : p, label = P ? `${p.name} ${item.label}` : p.name, id = (item.videoId || '').trim();
+    if (box.dataset.shown === (id || 'none') + plat) return; // already showing this
+    box.dataset.shown = (id || 'none') + plat;
+    if (!id) {
+      box.innerHTML = `<div class="rec mono"><i></i>REC</div><div class="soon-v"><div class="eq"><i></i><i></i><i></i><i></i><i></i></div>
+        <h3>${esc(label)} video dropping soon.</h3><p>It plays right here the moment it's live. Subscribe so you catch it first.</p>
+        <a href="${esc(AZ.links.subscribe)}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Subscribe on YouTube</a></div>`;
+      return;
+    }
+    box.innerHTML = `<div class="facade" role="button" tabindex="0" aria-label="Play ${esc(label)} video" style="background-image:url(https://i.ytimg.com/vi/${esc(id)}/maxresdefault.jpg)">
+      <div class="play"><svg viewBox="0 0 24 24"><path d="M6 4l14 8-14 8z"/></svg></div>
+      <div class="vlabel"><span class="tag"><span class="dot"></span>Watch · ${esc(label)}</span><span class="mono" style="color:#fff">Click to play</span></div></div>`;
+    const play = () => { box.innerHTML = `<iframe src="https://www.youtube.com/embed/${esc(id)}?autoplay=1&rel=0&modestbranding=1" title="${esc(label)} video" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>`; };
+    const f = $('.facade', box); f.addEventListener('click', play); f.addEventListener('keydown', e => (e.key === 'Enter' || e.key === ' ') && (e.preventDefault(), play()));
+  }
+  function renderTabs(el) {
+    const key = el.dataset.ptabs, P = platsOf(key); if (!P) { el.remove(); return; }
+    const cur = getPlat(key);
+    el.innerHTML = Object.entries(P).map(([k, v]) => `<button role="tab" aria-selected="${k === cur}" class="${k === cur ? 'on' : ''}" data-k="${k}">
+      ${ICON[k] || ''}<span>${esc(v.label)}</span>${v.status === 'soon' ? '<em>soon</em>' : ''}</button>`).join('');
+    $$('button', el).forEach(b => b.addEventListener('click', () => setPlat(key, b.dataset.k)));
+  }
+  function renderVers(el) {
+    const key = el.dataset.vers, p = AZ.products[key] || {}, P = platsOf(key); if (!P) return;
+    const cur = getPlat(key);
+    el.innerHTML = Object.entries(P).map(([k, v]) => {
+      const live = v.status !== 'soon' && v.download;
+      const meta = live ? [v.version && 'v' + v.version, v.size, v.format].filter(Boolean).join(' · ') : 'In development';
+      return `<article class="ver ${k === cur ? 'on' : ''} ${live ? '' : 'soon'}" data-k="${k}">
+        <div class="ver-top"><div class="ver-ic">${ICON[k] || ''}</div>${tag({ status: live ? 'live' : 'soon', version: v.version })}</div>
+        <h3>${esc(p.name)} <span>${esc(v.label)}</span></h3>
+        <p class="ver-sys">${esc(v.system || '')}</p>
+        <ul>${(v.perks || []).map(x => `<li>${esc(x)}</li>`).join('')}</ul>
+        <div class="ver-foot"><span class="mono">${esc(meta)}</span>
+          ${live ? `<a href="#get" class="btn btn-red btn-sm" data-pick="${k}">Get ${esc(v.label)} version <span class="ar">↓</span></a>`
+                 : `<a href="${esc(AZ.links.discord)}" target="_blank" rel="noopener" class="btn btn-ghost btn-sm">Get notified</a>`}</div>
+      </article>`;
+    }).join('');
+    $$('.ver', el).forEach(card => card.addEventListener('click', e => {
+      if (e.target.closest('a[target]')) return;
+      setPlat(key, card.dataset.k);
+      if (e.target.closest('[data-pick]')) { e.preventDefault(); const t = $('#get'); lenis ? lenis.scrollTo(t, { offset: -70, duration: 1.2 }) : t.scrollIntoView({ behavior: 'smooth' }); }
+    }));
+  }
+
+  /* =========================================================
      Unlock gate
      ========================================================= */
   function gate() {
     const g = $('.gate'); if (!g) return;
     const key = g.dataset.product, prod = AZ.products[key] || {}, worker = (AZ.workerUrl || '').replace(/\/$/, '');
     const S = store.get('az.gate', { dc: false, yt: false, ig: false });
+    // download password: checked by the Cloudflare worker (the site never contains it); remembered for this visit only
+    const pwStep = $('.gstep.pw', g);
+    let PW = ''; try { PW = sessionStorage.getItem('az.pw') || ''; } catch {}
+    const steps = () => ['dc', 'yt', 'ig'].filter(k => S[k]).length + (pwStep && PW ? 1 : 0);
+    const T = pwStep ? 4 : 3;
     const ringFg = $('.ring .fg', g), C = 2 * Math.PI * 46;
     const btn = $('.gate-final .btn', g), msg = $('.gate-msg', g), lbl = $('.lbl', btn);
     ringFg.style.strokeDasharray = C;
     if (!worker) $$('.gs', g).forEach(e => e.remove()); // "Verified" only once the Discord worker is live
+    const P = platsOf(key), pick = $('[data-gplat]', g);
+    const cur = () => { const k = P ? getPlat(key) : null; return { k, item: P ? P[k] : prod, label: P ? P[k].label : '' }; };
+    const drawPick = () => {
+      if (!pick) return;
+      if (!P) { pick.remove(); return; }
+      const k = getPlat(key);
+      pick.innerHTML = Object.entries(P).map(([pk, v]) => `<button type="button" role="radio" aria-checked="${pk === k}" class="${pk === k ? 'on' : ''}" data-k="${pk}">
+        ${ICON[pk] || ''}<span><b>${esc(v.label)}</b><small>${v.status === 'soon' || !v.download ? 'Coming soon' : esc(v.system || '')}</small></span></button>`).join('');
+      $$('button', pick).forEach(b => b.addEventListener('click', () => setPlat(key, b.dataset.k)));
+    };
     const render = () => {
-      const n = ['dc', 'yt', 'ig'].filter(k => S[k]).length;
-      ringFg.style.strokeDashoffset = C * (1 - n / 3);
-      $('.ring .mid b', g).textContent = n + '/3';
+      drawPick();
+      const { item, label } = cur(), dl = item.download, nm = label ? `${prod.name} ${label}` : prod.name;
+      const n = steps(), left = T - n;
+      ringFg.style.strokeDashoffset = C * (1 - n / T);
+      $('.ring .mid b', g).textContent = n + '/' + T;
+      if (pwStep) pwStep.classList.toggle('done', !!PW);
       ['dc', 'yt', 'ig'].forEach(k => $(`.gstep.${k}`, g).classList.toggle('done', !!S[k]));
-      if (!prod.download) { // product not released yet: the steps still work, the download says it's coming
+      msg.classList.remove('err');
+      if (!dl) { // this version isn't released yet: the steps still work, the download says it's coming
         btn.disabled = true;
-        lbl.textContent = n < 3 ? `Complete ${3 - n} more step${3 - n > 1 ? 's' : ''} · download soon` : `${prod.name} drops soon`;
-        msg.textContent = n < 3 ? 'Download is dropping soon. Get ready now.' : "You're all set. The Discord gets pinged the moment it drops.";
+        lbl.textContent = n < T ? `Complete ${left} more step${left > 1 ? 's' : ''} · ${label || 'download'} soon` : `${nm} drops soon`;
+        msg.textContent = n < T ? `${nm} is on the way. Get ready now.` : "You're all set. The Discord gets pinged the moment it drops.";
         return;
       }
-      btn.disabled = n < 3;
-      lbl.textContent = n < 3 ? `Complete ${3 - n} more step${3 - n > 1 ? 's' : ''}` : (worker ? 'Verify Discord & download' : `Download ${prod.name}`);
+      btn.disabled = n < T;
+      lbl.textContent = n < T ? `Complete ${left} more step${left > 1 ? 's' : ''}` : (worker ? `Verify Discord & get ${label || prod.name}` : `Download ${nm}`);
+      msg.textContent = [item.system, item.format, item.size, 'free'].filter(Boolean).join(' · ');
     };
     const linkFor = { dc: 'discord', yt: 'subscribe', ig: 'instagram' };
-    $$('.gstep', g).forEach(st => {
+    $$('.gstep.dc, .gstep.yt, .gstep.ig', g).forEach(st => {
       const k = ['dc', 'yt', 'ig'].find(c => st.classList.contains(c)), b = $('.btn', st), tm = $('.timer', st);
       b.addEventListener('click', () => {
         open(AZ.links[linkFor[k]], '_blank', 'noopener');
@@ -533,11 +612,36 @@
         }, 1000);
       });
     });
-    render();
+    render(); platHooks.push(render);
+
+    if (pwStep) {
+      const form = $('.pwform', pwStep), inp = $('.pwin', pwStep), pbtn = $('.pwbtn', pwStep), pmsg = $('.pwmsg', pwStep);
+      const lock = () => { inp.value = PW; inp.disabled = true; pbtn.textContent = 'Unlocked'; pbtn.disabled = true; pmsg.textContent = ''; };
+      if (PW) lock();
+      let busy = false;
+      const tryPw = async () => {
+        const v = inp.value.trim(); if (busy || !v) { inp.focus(); return; }
+        if (!worker) { pmsg.textContent = 'Password check is offline. Try again later.'; return; }
+        busy = true; pbtn.textContent = 'Checking…'; pmsg.className = 'pwmsg'; pmsg.textContent = '';
+        try {
+          const r = await fetch(`${worker}/check?k=${encodeURIComponent(v)}`, { cache: 'no-store' }).then(r => r.json());
+          if (!live()) return;
+          if (r.ok) { PW = v; try { sessionStorage.setItem('az.pw', v); } catch {} lock(); render(); pop(pwStep); sfx('step'); }
+          else {
+            pbtn.textContent = 'Unlock'; pmsg.className = 'pwmsg err'; pmsg.textContent = 'Wrong password. It is case-sensitive.'; sfx('error');
+            if (hasG) gsap.fromTo(pwStep, { x: -8 }, { x: 0, duration: .5, ease: 'elastic.out(1,.3)' });
+            inp.select();
+          }
+        } catch { pbtn.textContent = 'Unlock'; pmsg.className = 'pwmsg err'; pmsg.textContent = "Couldn't reach the checker. Try again."; }
+        busy = false;
+      };
+      pbtn.addEventListener('click', tryPw);
+      form.addEventListener('submit', e => { e.preventDefault(); tryPw(); });
+    }
 
     const unlock = then => {
       g.classList.add('unlocked');
-      $('.ring .mid', g).innerHTML = `<img src="assets/img/az-sigil.png" alt=""><b style="font-size:26px">UNLOCKED</b><span>${prod.name} ${prod.version || ''}</span>`;
+      $('.ring .mid', g).innerHTML = `<img src="assets/img/az-sigil.png" alt=""><b style="font-size:26px">UNLOCKED</b><span>${cur().label ? prod.name + ' ' + cur().label : prod.name} ${cur().item.version ? 'v' + cur().item.version : ''}</span>`;
       burst(g); sfx('unlock'); store.set('az.unlocked.' + key, true);
       if (hasG) gsap.fromTo(g, { scale: .985 }, { scale: 1, duration: .8, ease: 'elastic.out(1,.4)' });
       lbl.textContent = 'Downloading…';
@@ -546,9 +650,9 @@
     };
     btn.addEventListener('click', () => {
       if (btn.disabled) return;
-      if (worker) { location.href = `${worker}/auth?p=${encodeURIComponent(key)}`; return; }
-      if (!prod.download) { msg.textContent = 'Download link not set yet.'; return; }
-      unlock(() => location.href = prod.download);
+      const { k, item } = cur(); if (!item.download) return;
+      if (worker) { location.href = `${worker}/auth?p=${encodeURIComponent(k ? key + '-' + k : key)}&k=${encodeURIComponent(PW)}`; return; }
+      unlock(() => location.href = item.download);
     });
 
     // returning from the Discord verification worker
@@ -561,6 +665,7 @@
       msg.classList.add('err'); setTimeout(() => sfx('error'), 900);
       msg.textContent = e === 'notmember' ? "You're not in the Discord server yet. Join it, then press verify again." : 'Discord verification was cancelled or failed. Try again.';
       if (e === 'notmember') { S.dc = false; store.set('az.gate', S); render(); }
+      if (e === 'badpass') { msg.textContent = 'That password is wrong. Check the Azware video and try again (it is case-sensitive).'; PW = ''; try { sessionStorage.removeItem('az.pw'); } catch {} render(); }
       setTimeout(() => $('#get')?.scrollIntoView(), 400);
     }
   }

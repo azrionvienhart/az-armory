@@ -1,4 +1,7 @@
-﻿release/
+release/
 worker/.wrangler/
 node_modules/
 .claude/
+# private downloads, served only by the worker after the password + Discord check
+worker/files/
+worker/.dev.vars
