@@ -90,9 +90,14 @@
       const hash = new URL(url, location.href).hash;
       lenis ? lenis.scrollTo(0, { immediate: true, force: true }) : 0; scrollTo(0, 0);
       initPage(); startPage();
-      if (hash && $(hash)) setTimeout(() => lenis ? lenis.scrollTo($(hash), { offset: -70, immediate: true, force: true }) : $(hash).scrollIntoView(), 60);
-      onProg();
-      setTimeout(() => { wipe.classList.remove('in'); wipe.classList.add('out'); }, 60);
+      // jump to #section only after pinned sections have been measured, then open the shutter
+      const reveal = () => { onProg(); wipe.classList.remove('in'); wipe.classList.add('out'); };
+      if (hash && $(hash)) setTimeout(() => {
+        window.ScrollTrigger && ScrollTrigger.refresh();
+        const t = $(hash); if (t) { const y = t.getBoundingClientRect().top + scrollY - 70; lenis ? lenis.scrollTo(y, { immediate: true, force: true }) : scrollTo(0, y); }
+        setTimeout(reveal, 30);
+      }, 450);
+      else setTimeout(reveal, 60);
     } catch { location.href = url; return; }
     finally { navBusy = false; }
   }
@@ -274,8 +279,17 @@
       </a>
       <div class="sp-list">
         <div class="sp-head"><span class="mono">All products · ${all.length}</span><a href="index.html#products" class="mono">View catalogue →</a></div>
-        <div class="sp-items">${all.map(p => `<a class="sp-item ${p.page === here ? 'cur' : ''}" href="${esc(p.page)}">
-          <img src="${esc(p.icon)}" alt=""><div><b>${esc(p.name)}</b><small>${esc(p.tagline)}</small></div>${tag(p)}</a>`).join('')}</div>
+        <div class="sp-items">${all.map(p => {
+          const inner = `<img src="${esc(p.icon)}" alt=""><div><b>${esc(p.name)}</b><small>${esc(p.tagline)}</small></div>${tag(p)}`;
+          if (!p.platforms) return `<a class="sp-item ${p.page === here ? 'cur' : ''}" href="${esc(p.page)}">${inner}</a>`;
+          // products with versions: hovering reveals one option per version (PC / Mobile)
+          const vers = Object.entries(p.platforms).map(([k, v]) => {
+            const live = v.status !== 'soon' && v.download;
+            return `<a class="sp-ver ${live ? '' : 'soon'}" href="${esc(p.page)}#versions" data-pk="${esc(p.id)}" data-plat="${esc(k)}">
+              ${ICON[k] || ''}<span><b>${esc(v.label)}</b><small>${esc(v.short || v.system || '')}</small></span><em>${live ? 'Live' : 'Soon'}</em></a>`;
+          }).join('');
+          return `<div class="sp-item sp-multi ${p.page === here ? 'cur' : ''}"><a class="sp-main" href="${esc(p.page)}">${inner}</a><div class="sp-vers">${vers}</div></div>`;
+        }).join('')}</div>
       </div></div>`;
     nav.append(panel);
     let t;
@@ -293,7 +307,15 @@
     }
     on(document, 'click', e => { if (!e.target.closest('.store-panel, .store-btn')) set(false); });
     on(document, 'keydown', e => { if (e.key === 'Escape') set(false); });
-    panel.addEventListener('click', e => { if (e.target.closest('a')) { nav.classList.remove('store-open', 'open'); } });
+    panel.addEventListener('click', e => {
+      const v = e.target.closest('[data-plat]'); // version option: preselect it on the product page
+      if (v) {
+        try { sessionStorage.setItem('az.plat.' + v.dataset.pk, v.dataset.plat); } catch {} platHooks.forEach(fn => fn());
+        const t = $('#versions');
+        if (t && new URL(v.href).pathname === location.pathname) { e.preventDefault(); nav.classList.remove('store-open', 'open'); lenis ? lenis.scrollTo(t, { offset: -70, duration: 1.2 }) : t.scrollIntoView({ behavior: 'smooth' }); return; }
+      }
+      if (e.target.closest('a')) { nav.classList.remove('store-open', 'open'); }
+    });
   }
 
   /* ---------- counters ---------- */

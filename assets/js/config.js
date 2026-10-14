@@ -39,7 +39,7 @@ window.AZ = {
       // videoId = the part after watch?v= in the YouTube link.
       platforms: {
         pc: {
-          label: 'PC', system: 'Windows 10 / 11 (64-bit)', status: 'live', version: '1.0',
+          label: 'PC', short: 'Windows', system: 'Windows 10 / 11 (64-bit)', status: 'live', version: '1.0',
           size: '1.1 MB', format: 'zip',
           // the file is stored privately on the Cloudflare worker (worker/files) and only handed out after the password + Discord check
           download: true,
@@ -47,10 +47,10 @@ window.AZ = {
           perks: ['Desktop app with its own window', '3D aim trainer', 'Progress saved on your PC']
         },
         mobile: {
-          label: 'Mobile', system: 'Android & iPhone', status: 'soon',
+          label: 'Mobile', short: 'Android APK', system: 'Android (APK)', status: 'soon',
           download: '',
           videoId: '',
-          perks: ['Built for touch', 'Mobile drills for Rivals on phone', 'Same daily quests']
+          perks: ['Android app, installed from an APK', 'Built for touch, with mobile drills for Rivals', 'Same daily quests']
         }
       }
     },    opticore: {

@@ -583,3 +583,23 @@ footer{border-top:1px solid var(--line);padding:80px 0 30px;overflow:hidden}
 .pwmsg{font-size:12px;min-height:16px;color:var(--mute)}
 .pwmsg.err{color:var(--red)}
 .pwbtn[disabled]{opacity:.6}
+/* ---------- Arsenal menu: products with versions expand on hover ---------- */
+.sp-item.sp-multi{display:block;padding:0}
+.sp-multi .sp-main{display:grid;grid-template-columns:44px 1fr;gap:6px 14px;align-items:center;padding:14px}
+.sp-multi .sp-main img{width:44px;height:44px;object-fit:contain;grid-row:span 2}
+.sp-multi .sp-main .tag{grid-column:2;justify-self:start;padding:4px 8px;font-size:9px}
+.sp-vers{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 14px;max-height:0;opacity:0;overflow:hidden;
+  transition:max-height .45s var(--ease),opacity .3s,padding .45s var(--ease)}
+.sp-multi:hover .sp-vers,.sp-multi:focus-within .sp-vers{max-height:120px;opacity:1;padding:0 14px 14px}
+.sp-ver{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--line);background:rgba(0,0,0,.35);transition:border-color .3s,background .3s,box-shadow .3s;min-width:0}
+.sp-ver svg{width:18px;height:18px;fill:none;stroke:var(--red);stroke-width:1.6;flex:none}
+.sp-ver span{display:flex;flex-direction:column;min-width:0}
+.sp-ver b{font-family:var(--f-display);font-size:13px;font-weight:600}
+.sp-ver small{font-size:10px;color:var(--mute);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sp-ver em{margin-left:auto;font-style:normal;font-family:var(--f-mono);font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--red);border:1px solid var(--line2);padding:3px 6px;flex:none}
+.sp-ver.soon svg{stroke:var(--gold)}
+.sp-ver.soon em{color:var(--gold);border-color:rgba(255,179,71,.35)}
+.sp-ver:hover{border-color:var(--red);background:rgba(255,45,61,.08);box-shadow:0 0 18px rgba(255,45,61,.18)}
+.sp-ver.soon:hover{border-color:var(--gold);background:rgba(255,179,71,.06);box-shadow:none}
+/* touch screens can't hover: always show the versions */
+@media (hover:none){.sp-vers{max-height:none;opacity:1;padding:0 14px 14px}}
