@@ -520,7 +520,11 @@
   const platsOf = key => (AZ.products[key] || {}).platforms || null;
   function getPlat(key) {
     const P = platsOf(key); if (!P) return null;
-    let v = null; try { v = sessionStorage.getItem('az.plat.' + key); } catch {}
+    let v = null; try {
+      const qp = new URLSearchParams(location.search).get('plat');   // ?plat=mobile (sent back from the locked web app) preselects it
+      if (qp && P[qp]) sessionStorage.setItem('az.plat.' + key, qp);
+      v = sessionStorage.getItem('az.plat.' + key);
+    } catch {}
     return P[v] ? v : Object.keys(P)[0];
   }
   function setPlat(key, v) {
@@ -617,7 +621,7 @@
         return;
       }
       btn.disabled = n < T;
-      lbl.textContent = n < T ? `Complete ${left} more step${left > 1 ? 's' : ''}` : (worker ? `Verify Discord & get ${label || prod.name}` : `Download ${nm}`);
+      lbl.textContent = n < T ? `Complete ${left} more step${left > 1 ? 's' : ''}` : (worker ? `Verify Discord & ${item.opens ? 'open' : 'get'} ${label || prod.name}` : `Download ${nm}`);
       msg.textContent = [item.system, item.format, item.size, 'free'].filter(Boolean).join(' · ');
     };
     const linkFor = { dc: 'discord', yt: 'subscribe', ig: 'instagram' };
@@ -666,9 +670,10 @@
       $('.ring .mid', g).innerHTML = `<img src="assets/img/az-sigil.png" alt=""><b style="font-size:26px">UNLOCKED</b><span>${cur().label ? prod.name + ' ' + cur().label : prod.name} ${cur().item.version ? 'v' + cur().item.version : ''}</span>`;
       burst(g); sfx('unlock'); store.set('az.unlocked.' + key, true);
       if (hasG) gsap.fromTo(g, { scale: .985 }, { scale: 1, duration: .8, ease: 'elastic.out(1,.4)' });
-      lbl.textContent = 'Downloading…';
+      const app = !!cur().item.opens;   // web app versions open instead of downloading
+      lbl.textContent = app ? 'Opening the app…' : 'Downloading…';
       setTimeout(then, 1100);
-      setTimeout(() => { lbl.textContent = 'Download again'; btn.disabled = false; }, 3000);
+      setTimeout(() => { lbl.textContent = app ? 'Open again' : 'Download again'; btn.disabled = false; }, 3000);
     };
     btn.addEventListener('click', () => {
       if (btn.disabled) return;

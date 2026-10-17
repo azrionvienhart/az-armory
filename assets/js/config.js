@@ -47,10 +47,12 @@ window.AZ = {
           perks: ['Desktop app with its own window', '3D aim trainer', 'Progress saved on your PC']
         },
         mobile: {
-          label: 'Mobile', short: 'Android APK', system: 'Android (APK)', status: 'soon',
-          download: '',
+          label: 'Mobile', short: 'Android + iPhone', system: 'Android & iPhone', status: 'live', version: '1.0',
+          size: '1.6 MB', format: 'web app',
+          // the web app lives on the Cloudflare worker at /m/ and opens only after the password + Discord check
+          download: true, opens: true,
           videoId: '',
-          perks: ['Android app, installed from an APK', 'Built for touch, with mobile drills for Rivals', 'Same daily quests']
+          perks: ['Android & iPhone: add it to your Home Screen', 'Built for touch, with Rivals mobile sensitivity', 'Works offline after the first open']
         }
       }
     },    opticore: {

@@ -8,9 +8,12 @@
 const PRODUCTS = {
   // one entry per downloadable version (the site sends p=<product>-<platform>)
   // sset = a file in worker/files/ (private: only handed out after the password + Discord checks)
-  'azware-pc': { page: 'azware.html', asset: '/Azware-v1.0-Windows.zip' }
-  // 'azware-mobile': { page: 'azware.html', file: '...' }
+  'azware-pc': { page: 'azware.html', asset: '/Azware-v1.0-Windows.zip' },
+  // web app (Android + iPhone): unlocking sets a 1-year cookie and opens <worker>/m/, served from worker/files/m/
+  'azware-mobile': { page: 'azware.html', app: '/m/' }
 };
+const APP_COOKIE = 'azm', APP_DAYS = 365;
+const cookie = (req, name) => (req.headers.get('Cookie') || '').split(/;\s*/).map(c => c.split('=')).find(([k]) => k === name)?.slice(1).join('=') || '';
 
 const enc = new TextEncoder();
 const b64u = buf => btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
@@ -94,6 +97,11 @@ export default {
       const t = await verify(env, url.searchParams.get('t'));
       if (!t || !PRODUCTS[t.p]) return new Response('Download link expired. Unlock again on the site.', { status: 403 });
       const prod = PRODUCTS[t.p];
+      if (prod.app) {   // web app: remember the unlock on this phone for a year, then open it
+        const c = await sign(env, { p: t.p, exp: Date.now() + APP_DAYS * 864e5 });
+        return new Response(null, { status: 302, headers: { Location: url.origin + prod.app, 'Cache-Control': 'no-store',
+          'Set-Cookie': `${APP_COOKIE}=${c}; Path=${prod.app}; Max-Age=${APP_DAYS * 86400}; Secure; HttpOnly; SameSite=Lax` } });
+      }
       if (prod.file) return Response.redirect(prod.file, 302);
       const r = await env.ASSETS.fetch(new Request(new URL(prod.asset, url.origin)));
       if (!r.ok) return new Response('File not found.', { status: 404 });
@@ -101,6 +109,27 @@ export default {
       h.set('Content-Disposition', `attachment; filename="${prod.asset.split('/').pop()}"`);
       h.set('Cache-Control', 'no-store');
       return new Response(r.body, { status: 200, headers: h });
+    }
+
+    // AzWare - Mobile web app: only for phones that unlocked it (cookie from /download)
+    if (url.pathname === '/m') return Response.redirect(url.origin + '/m/', 301);
+    if (url.pathname.startsWith('/m/')) {
+      const ok = await verify(env, cookie(req, APP_COOKIE));
+      if (!ok || ok.p !== 'azware-mobile') {
+        if (req.mode === 'navigate' || (req.headers.get('Accept') || '').includes('text/html'))
+          return Response.redirect(`${env.SITE_URL.replace(/\/$/, '')}/azware.html?plat=mobile#get`, 302);
+        return new Response('Locked. Unlock Azware Mobile on the site first.', { status: 403 });
+      }
+      const path = url.pathname === '/m/' ? '/m/index.html' : url.pathname;
+      if (path.includes('..')) return new Response('Bad path', { status: 400 });
+      const r = await env.ASSETS.fetch(new Request(new URL(path, url.origin), { method: req.method }));
+      if (!r.ok) return new Response('Not found', { status: 404 });
+      const h = new Headers(r.headers);
+      const fresh = /\/(index\.html|sw\.js|manifest\.webmanifest)$/.test(path);   // these must update; the rest is cached by the app
+      h.set('Cache-Control', fresh ? 'no-cache, private' : 'private, max-age=604800');
+      if (path.endsWith('.webmanifest')) h.set('Content-Type', 'application/manifest+json');
+      if (path.endsWith('sw.js')) h.set('Service-Worker-Allowed', '/m/');
+      return new Response(r.body, { status: r.status, headers: h });
     }
 
     return new Response('Az.Armory gate', { status: 200 });

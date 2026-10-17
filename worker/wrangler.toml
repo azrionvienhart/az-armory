@@ -12,3 +12,4 @@ SITE_URL = "https://azrionvienhart.github.io/az-armory"
 directory = "./files"
 binding = "ASSETS"
 run_worker_first = true
+html_handling = "none"   # serve m/index.html as-is (the worker maps /m/ to it)
